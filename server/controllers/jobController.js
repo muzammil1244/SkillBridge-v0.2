@@ -182,20 +182,43 @@ export const getAppliedJobs = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
 export const Jobs = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const job_name = req.query.job_name;
+  const job_location = req.query.job_location;
+  const job_salary = req.query.job_salary;
+  const limit = 10;
+  const skip = (page - 1) * limit;
 
   try {
-    const data = await Job.find()
+    // Filter object banao — sirf jo diya hai woh add karo
+    const filter = {};
 
-    return res.json(data)
+    if (job_name) {
+      filter.title = { $regex: job_name, $options: "i" }; // case insensitive search
+    }
+
+    if (job_location) {
+      filter.jobtype = { $regex: job_location, $options: "i" };
+    }
+
+    if (job_salary) {
+      filter.budget = { $gte: parseInt(job_salary) }; // minimum salary
+    }
+
+    const jobs = await Job.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalJobs = await Job.countDocuments(filter); // filter ke saath count karo
+    const hasMore = page < Math.ceil(totalJobs / limit);
+
+    return res.json({ jobs, hasMore });
   } catch (err) {
-    res.send(err)
+    res.status(500).json({ error: err.message });
   }
-
-
-
-}
+};
 
 
 

@@ -72,8 +72,11 @@ export const Homee = () => {
     const storedValue = localStorage.getItem("myValue");
     return storedValue === "true";
   })
-  const [loader, sertloader] = useState(false)
 
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [jobsLoading, setJobsLoading] = useState(false);
+  const bottomRef = useRef();
   const [truedata, falsedata] = useState([])
   const [gettoke, settoken] = useState("")
   const [selected, setSelected] = useState("sun");
@@ -170,6 +173,10 @@ export const Homee = () => {
     }));
   };
 
+
+
+
+
   const PostReview = async () => {
     const token = localStorage.getItem("token");
 
@@ -178,15 +185,15 @@ export const Homee = () => {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/review/add/review`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify(getreviewdata) 
+        body: JSON.stringify(getreviewdata)
       });
 
       if (!res.ok) {
         const errData = await res.json();
-        console.error("Backend error:", errData); 
+        console.error("Backend error:", errData);
       } else {
         const result = await res.json();
         console.log("Review submitted:", result);
@@ -203,7 +210,7 @@ export const Homee = () => {
     const { name, value, type, files } = e.target;
 
     if (type === "file") {
-      setFormData({ ...getformdata, [name]: files[0] }); 
+      setFormData({ ...getformdata, [name]: files[0] });
     } else {
       setFormData({ ...getformdata, [name]: value });
     }
@@ -213,32 +220,39 @@ export const Homee = () => {
     setShowFullDesc((prev) => !prev);
   };
 
+
+
+  // here the all job fetch with paggination and with filter 
+  
+const jobsdata = async (pageNum = 1, currentFilters = filters) => {
+  const token = localStorage.getItem("token");
+  setJobsLoading(true);
+
+  const params = new URLSearchParams({ page: pageNum });
+  if (currentFilters.title) params.append("job_name", currentFilters.title);
+  if (currentFilters.location) params.append("job_location", currentFilters.location);
+  if (currentFilters.minSalary) params.append("job_salary", currentFilters.minSalary);
+
+  try {
+    const jobdata = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/freelancer/jobs?${params}`,
+      { method: "GET", headers: { Authorization: `Bearer ${token}` } }
+    );
+    const data = await jobdata.json();
+    falsedata((prev) => pageNum === 1 ? data.jobs : [...prev, ...data.jobs]);
+    setHasMore(data.hasMore);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setJobsLoading(false);
+  }
+};
+
+
+
   useEffect(() => {
 
-    const jobsdata = async () => {
-      try {
 
-        const token = localStorage.getItem("token");
-        settoken(token)
-
-
-        const jobdata = await fetch(`${import.meta.env.VITE_API_URL}/api/freelancer/jobs`, {
-          method: "GET",
-          headers: {
-            "Authorization": `Bearer ${token}`, 
-          },
-        })
-        const data = await jobdata.json()
-
-        falsedata(data)
-
-
-
-
-      } catch (err) {
-        console.log(err)
-      }
-    }
 
     const data = localStorage.getItem("token")
     const decoded = jwtDecode(data)
@@ -251,13 +265,33 @@ export const Homee = () => {
 
     }
 
-    jobsdata()
     profile()
     applicationdata()
   }, [])
+
+
+ useEffect(() => {
+  jobsdata(1, filters);
+}, [filters]);
+
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && hasMore && !jobsLoading) {
+        setPage((prev) => prev + 1);
+      }
+    });
+    if (bottomRef.current) observer.observe(bottomRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, jobsLoading]);
+
+
+
   useEffect(() => {
     Reviewfun()
   }, [])
+
+
   const tokenremove = () => {
 
     localStorage.removeItem("token")
@@ -284,7 +318,7 @@ export const Homee = () => {
 
       const pdata = await data.json();
       setprofile(pdata);
-      console.log("profile data",pdata);
+      console.log("profile data", pdata);
 
     } catch (err) {
       console.log(err);
@@ -292,7 +326,6 @@ export const Homee = () => {
   };
 
 
-  console.log("prfoile data", getprofile)
   useEffect(() => {
     if (location.state?.truenot) {
       setShowNotification(true);
@@ -303,6 +336,7 @@ export const Homee = () => {
       }, 3000);
     }
   }, [location, navigate]);
+
 
   useEffect(() => {
     if (getprofile && Object.keys(getprofile).length > 0) {
@@ -316,7 +350,6 @@ export const Homee = () => {
   }, [getprofile]);
   const updateprofile = async (e) => {
     e.preventDefault()
-console.log("updat fun osreked")
     const token = localStorage.getItem("token")
     const realFormData = new FormData();
 
@@ -344,9 +377,9 @@ console.log("updat fun osreked")
       const update = await fetch(`${import.meta.env.VITE_API_URL}/api/user/profileupdate`, {
         method: "PATCH",
         headers: {
-          "Authorization": `Bearer ${token}`, 
+          "Authorization": `Bearer ${token}`,
         },
-        body: realFormData, 
+        body: realFormData,
 
       })
 
@@ -369,7 +402,7 @@ console.log("updat fun osreked")
   }
 
   const applicationdata = async () => {
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
 
     if (!token) {
       console.log("No token found");
@@ -380,7 +413,7 @@ console.log("updat fun osreked")
       const applicantdata = await fetch(`${import.meta.env.VITE_API_URL}/api/freelancer/applied-jobs`, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}`, 
+          "Authorization": `Bearer ${token}`,
         },
       })
 
@@ -400,21 +433,18 @@ console.log("updat fun osreked")
   }, [themtrue])
 
 
-  const handlefilter = (e) => {
-    falsefilter({ ...filters, [e.target.name]: e.target.value });
-  };
+const handlefilter = (e) => {
+  const newFilters = { ...filters, [e.target.name]: e.target.value };
+  falsefilter(newFilters);  // state update
+  setPage(1);
+  falsedata([]);
+  setHasMore(true);
+  jobsdata(1, newFilters);  // ✅ naya filter seedha pass karo — state ka wait mat karo
+};
 
 
-  const filterdata = truedata.filter((job) => {
-    const jobtitle = !filters.title || job.title.toLowerCase().includes(filters.title.toLowerCase());
-    const joblocation = !filters.location || job.jobtype?.toLowerCase().includes(filters.location.toLowerCase());
-    const jobsalary = !filters.minSalary || job.budget >= parseInt(filters.minSalary);
+ 
 
-    return jobtitle && joblocation && jobsalary
-  })
-
-  console.log("filter data data ",filterdata)
-    let jobdatawithfun = showalljob?filterdata:filterdata.slice(0,10)
 
 
   let ref2 = useRef()
@@ -541,8 +571,8 @@ console.log("updat fun osreked")
 
               <div className="shadow-inner shadow-purple-800  dark:shadow-shadow-color gap-2 px-3 items-center justify-around py-[3px] rounded-[10px] dark:bg-bg-dark bg-purple-500 dark:border-border-color border-2 border-purple-200 flex">
                 <NewJobIcon color="white" size={20} />
-                <h1 className="text-gray-300 dark:text-secondary-text-color font-serif text-[12px]">Applications {getapplicationdata && getapplicationdata.length ? getapplicationdata.length : 
-0                }</h1>
+                <h1 className="text-gray-300 dark:text-secondary-text-color font-serif text-[12px]">Applications {getapplicationdata && getapplicationdata.length ? getapplicationdata.length :
+                  0}</h1>
               </div>
             </div>
 
@@ -750,7 +780,7 @@ console.log("updat fun osreked")
                     <div
                       onClick={() => {
 
-                        setFiltertrue(false); 
+                        setFiltertrue(false);
                       }}
                       className="flex items-center gap-1 text-gray-700 dark:text-white bg-white dark:bg-transparent border border-orange-500 hover:bg-orange-100 dark:hover:bg-orange-900 rounded-xl px-4 py-1 text-sm"
                     >
@@ -804,7 +834,7 @@ console.log("updat fun osreked")
               onClick={() => {
                 menufalse(!menutrue)
                 setthem(false)
-                filterfalse(false)
+                setFiltertrue(false)
               }} className={` p-[5px] ${menutrue ? "border-purple-500" : null} flex relative cursor-pointer dark:bg-card-color     md:gap-3 bg-gray-100 shadow-sm   dark:hover:bg-border-color hover:bg-gray-100 duration-100 dark:border-border-color  md:py-[7px] rounded md:rounded-[7px] md:px-3`}>
               <Menu01Icon className="size-[14px] dark:text-gray-300 md:size-[18px]" />
 
@@ -879,9 +909,9 @@ console.log("updat fun osreked")
           </div>
         </nav>
 
+{/* the infinite scroll with the paggination of mongodb   */}
 
-
-        {truedata && truedata.length ? jobdatawithfun.map((element) => (
+        {truedata && truedata.length ? truedata.map((element) => (
           <div
             key={element._id}
             className="w-full hover:scale-102 duration-200 max-w-xl  mx-auto px-3 md:px-7 py-2 md:py-6 dark:bg-card-color bg-white rounded-2xl shadow-xl border dark:border-border-color border-purple-200 my-3  md:my-10"
@@ -952,14 +982,23 @@ console.log("updat fun osreked")
               </button>
             </div>
           </div>
-        )) : <div className="flex w-full h-full justify-center items-center" role="status">
-          <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 dark:fill-white  fill-purple-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-          </svg>
-          <span class="sr-only">Loading...</span>
-        </div>
+        )) : <p className="text-center text-gray-400 dark:text-secondary-text-color py-10 text-sm">
+    No jobs found 
+  </p>
         }
+        <div ref={bottomRef} />
+
+        {jobsLoading && (
+          <div className="flex justify-center py-4">
+            <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
+        {!hasMore && !jobsLoading && truedata.length > 0 && (
+          <p className="text-center text-gray-400 dark:text-secondary-text-color py-4 text-sm">
+            No more jobs to load
+          </p>
+        )}
 
         {showpage && selectedJob && (
           <motion.div
@@ -1058,8 +1097,7 @@ console.log("updat fun osreked")
             </div>
           </motion.div>
         )}
-        <div onClick={()=>setshhowalljobs(!showalljob)} className=" w-full flex justify-center  ">
-<h1 className="text-center text-gray-400  px-10 border-b-2 border-gray-500 w-fit pb-3   text-sm md:text-sm" > View all</h1>        </div>
+       
 
 
 
@@ -1099,7 +1137,7 @@ console.log("updat fun osreked")
               whileTap={{
                 scale: 0.8,
                 rotate: 180
-              }} 
+              }}
               transition={{ type: "spring", duration: 0.5 }}
               className="cursor-pointer bg-purple-500 hover:bg-purple-600 text-white p-2 rounded-full shadow transition duration-200"
               title="Add Review"
@@ -1137,7 +1175,7 @@ console.log("updat fun osreked")
                 <button
                   onClick={() => {
                     PostReview();
-                    window.location.reload(); 
+                    window.location.reload();
                   }}
                   className="self-end bg-purple-500 hover:bg-purple-600 text-white font-semibold px-4 py-2 rounded-lg"
                 >
@@ -1175,7 +1213,7 @@ console.log("updat fun osreked")
                 </div>
               );
             }) : (
-             null
+              null
             )}
           </div>
 
