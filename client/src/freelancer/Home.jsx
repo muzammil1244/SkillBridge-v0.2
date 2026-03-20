@@ -49,7 +49,11 @@ import {
   StarIcon,
   Building02Icon,
   UserIcon,
-  Cancel01Icon
+  Cancel01Icon,
+  CancelSquareIcon,
+  LaptopIcon,
+  HandBag01Icon,
+  SearchCircleIcon
 } from "hugeicons-react";
 import { useEffect, useRef, useState } from "react";
 import { useFetcher, useLocation, useNavigate } from "react-router-dom";
@@ -487,505 +491,513 @@ const handlefilter = (e) => {
       className="md:w-screen md:h-screen   overflow-x-hidden bg-white md:grid md:grid-cols-8  lg:grid-cols-4">
 
 
+{/* profile section  */}
 
+    <div className={`${showprofile == true ? "right-0" : "right-[-100%] hidden"} absolute md:static z-10 md:block md:overflow-x-hidden lg:overflow-visible md:col-span-3 lg:col-span-1 md:flex md:flex-col items-center bg-white dark:bg-bg-dark md:dark:border-r-2 md:dark:border-border-color duration-100`}>
 
-      <div className={`bg-purple-500   ${showprofile == true ? " right-0 duration-100  " : " right-[-100%] duration-100 hidden  "}  absolute  md:static z-10 md:block md:overflow-x-hidden lg:overflow-visible dark:bg-bg-dark md:dark:border-r-2 md:dark:border-border-color md:col-span-3  lg:col-span-1  md:flex md:flex-col items-center`}>
-        <div className=" relative flex flex-col md:ml-0    bg-purple-500 dark:bg-bg-dark md:border-r-1 dark:border-border-color  overflow-hidden   md:size-80 md:p-5">
-          {
-            getprofile && getprofile.profileImage ? <motion.img
-              ref={ref2}
-              style={{
-                rotateX: rotateX2,
-                rotateY: rotateY2,
-                transformStyle: "preserve-3d",
-              }}
-              onMouseMove={handleMouseMove2}
-              onMouseLeave={handleMouseLeave2}
-              className="h-full w-full rounded object-cover"
-              src={getprofile.profileImage}
-              alt="profile image"
-            />
-
-              :
-
-
-              <div className="flex w-full h-full justify-center items-center" role="status">
-                <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 dark:fill-white  fill-purple-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-                </svg>
-                <span class="sr-only">Loading...</span>
-              </div>
-
-          }
-
-
-
-          <Cancel01Icon onClick={() => setshowprofile(false)} className=" absolute top-2 right-5 text-gray-500 md:hidden " />
-
-          <div className="flex absolute bottom-3 right-3 md:hidden flex-col gap-1">
-            {
-              getprofile ? <h1 className="text-[20px] text-center text-white dark:text-text-color font-sans">
-                {getprofile.name}
-              </h1> : null
-            }
-
-            <h1 className="text-white text-[10px] dark:text-secondary-text-color">{getprofile.email}</h1>
-
-          </div>
-
+  {/* Profile Image Section */}
+  <div className="relative h-[200px] md:h-[220px] w-full overflow-hidden bg-[#1a0533]">
+    {getprofile && getprofile.profileImage ? (
+      <motion.img
+        ref={ref2}
+        style={{ rotateX: rotateX2, rotateY: rotateY2, transformStyle: "preserve-3d" }}
+        onMouseMove={handleMouseMove2}
+        onMouseLeave={handleMouseLeave2}
+        className="w-full h-full object-cover opacity-85"
+        src={getprofile.profileImage}
+        alt="profile"
+      />
+    ) : (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full bg-purple-200 flex items-center justify-center">
+          <span className="text-purple-700 font-bold text-xl">
+            {getprofile?.name?.charAt(0)?.toUpperCase() || "?"}
+          </span>
         </div>
-        <div className="w-full  h-full p-3">
-          <div
-
-
-            className="border-2  shadow-inner px-5 border-purple-400 dark:border-border-color py-4 px-2 flex flex-col items-center bg-purple-500 dark:bg-card-color shadow-2xl shadow-purple-950 dark:shadow-shadow-color w-full  md:h-full rounded-2xl">
-            {
-              getprofile ? <h1 className="text-[25px] text-center text-white dark:text-text-color font-extrabold">
-                {getprofile.name}
-              </h1> : null
-            }
-
-            <h1 className="text-white dark:text-secondary-text-color">{getprofile.email}</h1>
-
-
-
-            <div className="flex w-full  justify-around gap-1 items-center mt-7">
-              <div className="shadow-inner shadow-purple-800 dark:shadow-shadow-color gap-2 px-3 items-center justify-around py-[3px] rounded-[10px] bg-purple-500 dark:bg-bg-dark border-2 dark:border-border-color border-purple-200 flex">
-                <img
-                  className="size-5"
-                  src={laptopimg}
-                  alt=""
-                />
-                <h1 className="text-gray-300 dark:text-secondary-text-color font-serif text-[12px]">
-                  {getprofile ? getprofile.roll :
-                    <div className=" flex size-3 justify-center items-center" role="status">
-                      <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 dark:fill-white  fill-purple-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-                      </svg>
-                      <span class="sr-only">Loading...</span>
-                    </div>}
-                </h1>
-              </div>
-
-              <div className="shadow-inner shadow-purple-800  dark:shadow-shadow-color gap-2 px-3 items-center justify-around py-[3px] rounded-[10px] dark:bg-bg-dark bg-purple-500 dark:border-border-color border-2 border-purple-200 flex">
-                <NewJobIcon color="white" size={20} />
-                <h1 className="text-gray-300 dark:text-secondary-text-color font-serif text-[12px]">Applications {getapplicationdata && getapplicationdata.length ? getapplicationdata.length :
-                  0}</h1>
-              </div>
-            </div>
-
-            <button onClick={() => editefalse(!editetrue)} className="text-white dark:text-text-color  cursor-pointer px-[68px] bg-purple-600  dark:bg-accent-color border-purple-400 dark:border-accent-color dark:hover:bg-accent-light border-2 py-[3px] active:shadow-inner duration-90 rounded-[10px] shadow-purple-950 dark:shadow-shadow-color mt-10">
-              edit profile
-            </button>
-            {
-              editetrue ? <>
-                <motion.form
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-
-                  onSubmit={updateprofile}
-                  className=" flex gap-10   flex-col mt-10">
-
-
-                  <div className="flex gap-2 sm:gap-4 justify-center items-center w-full">
-                    <MentoringIcon className="dark:text-secondary-text-color text-gray-300 text-sm sm:text-base" />
-
-                    <select
-                      onChange={handleChange}
-                      title="choose role"
-                      placeholder="choose user"
-                      defaultValue={getprofile.roll}
-                      name="reason"
-                      required
-                      className="border-gray-300 dark:border-border-color
-      px-4 sm:px-10 py-[4px]
-      shadow-inner shadow-sm sm:shadow-2xl
-      w-full sm:w-full
-      focus:outline-none dark:focus:border-border-color focus:border-purple-500
-      dark:shadow-shadow-color shadow-purple-700
-      border-2 rounded-xl
-      dark:text-secondary-text-color text-gray-300
-      text-sm sm:text-base"
-                    >
-                      <option
-                        className="bg-purple-500 dark:bg-card-color rounded-xl text-gray-300"
-                        value="freelancer"
-                      >
-                        freelancer
-                      </option>
-                      <option
-                        className="bg-purple-500 dark:bg-card-color text-gray-300"
-                        value="employer"
-                      >
-                        employer
-                      </option>
-                    </select>
-                  </div>
-
-                  <div className="flex gap-4 justify-center items-center 
- ">
-                    <UserStar02Icon className=" dark:text-secondary-text-color text-gray-300" />
-                    <input v placeholder="user name" defaultValue={getprofile.name} className="border-gray-300 dark:border-border-color
-  w-full shadow-inner shadow-2xl focus:-2 outline-none dark:focus:border-border-color focus:border-purple-500  text-center dark:checked:border-accent-color checked:bg-purple-500 dark:shadow-shadow-color shadow-purple-700
-  border-2 py-[2px] rounded-xl dark:text-secondary-text-color text-gray-300" name="name" onChange={handleChange} type="text" required />
-                  </div>
-                  <div className="flex gap-4 justify-center items-center 
- ">
-                    <Mail01Icon className=" dark:text-secondary-text-color text-gray-300" />
-                    <input onChange={handleChange} defaultValue={getprofile.email} placeholder="User Email" className="border-gray-300 dark:border-border-color
-  w-full shadow-inner shadow-2xl focus:-2 outline-none dark:focus:border-border-color focus:border-purple-500 text-center  checked:bg-purple-500 dark:shadow-shadow-color shadow-purple-700
-  border-2 py-[2px] rounded-xl dark:text-secondary-text-color text-gray-300" name="email" type="text" required />
-                  </div>
-                  <div className="flex gap-4 justify-center items-center 
- ">
-                    <LockPasswordIcon className="text-gray-300" />
-                    <input onChange={handleChange} placeholder="User Password" className="border-gray-300 dark:border-border-color
-  w-full shadow-inner shadow-2xl focus:-2 outline-none dark:focus:border-border-color focus:border-purple-500  text-center checked:bg-purple-500 dark:shadow-shadow-color shadow-purple-700
-  border-2 py-[2px] rounded-xl dark:text-secondary-text-color text-gray-300" name="password" type="password" />
-                  </div>
-
-                  <div className="flex gap-4 justify-center items-center 
- ">
-                    <ImageAdd02Icon className="text-gray-300" />
-                    <input onChange={handleChange} placeholder="User Email" className="border-gray-300 dark:border-border-color
-  w-full shadow-inner shadow-2xl focus:-2 outline-none dark:focus:border-border-color focus:border-purple-500  text-center checked:bg-purple-500 dark:shadow-shadow-color shadow-purple-700
-  border-2 py-[2px] rounded-xl dark:text-secondary-text-color text-gray-300" name="profileImage" type="file" />
-                  </div>
-
-
-                  <div className="flex gap-2">
-                    <button onClick={() => {
-                      editefalse(!editetrue)
-
-                    }} className=" bg-red-500 cursor-pointer opacity-80  w-full rounded-xl text-gray-300 py-2">Cancel</button>
-                    <button type="submit" className="bg-orange-500 cursor-pointer opacity-80  w-full rounded-xl text-gray-300 py-2">
-
-                      Save</button>
-
-                  </div>
-
-
-
-                </motion.form></> : ""
-            }
-          </div>
-
-        </div>
-
       </div>
+    )}
+
+    {/* Gradient overlay */}
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[rgba(26,5,51,0.92)]" />
+
+    {/* Name on image */}
+    <div className="absolute bottom-3 left-4 right-4">
+      <h2 className="text-white font-bold text-lg leading-tight">{getprofile?.name}</h2>
+      <p className="text-white/60 text-xs mt-0.5">{getprofile?.email}</p>
+    </div>
+
+    {/* Mobile close button */}
+    <button
+      onClick={() => setshowprofile(false)}
+      className="absolute top-3 right-3 md:hidden w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30"
+    >
+      <CancelSquareIcon size={14} />
+    </button>
+  </div>
+
+  {/* Profile Body */}
+  <div className="w-full p-4 flex flex-col gap-3 bg-white dark:bg-bg-dark">
+
+    {/* Badges */}
+    <div className="flex gap-2 flex-wrap">
+      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EEEDFE] dark:bg-purple-900/30 text-[#3C3489] dark:text-purple-300 text-xs font-medium">
+        <LaptopIcon size={11} />
+        {getprofile?.roll || "—"}
+      </div>
+      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E1F5EE] dark:bg-green-900/30 text-[#0F6E56] dark:text-green-300 text-xs font-medium">
+        <HandBag01Icon size={11} />
+        {getapplicationdata?.length || 0} Applications
+      </div>
+    </div>
+
+    <div className="h-px bg-gray-100 dark:bg-border-color" />
+
+    {/* Edit Button */}
+    <button
+      onClick={() => editefalse(!editetrue)}
+      className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-gray-200 dark:border-border-color text-sm font-medium text-gray-700 dark:text-text-color hover:bg-gray-50 dark:hover:bg-card-color transition-colors"
+    >
+      <Edit01Icon size={14} />
+      Edit Profile
+    </button>
+
+    {/* Edit Form */}
+    {editetrue && (
+      <motion.form
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        onSubmit={updateprofile}
+        className="flex flex-col gap-3"
+      >
+
+        {/* Role */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color">Role</span>
+          <div className="flex items-center gap-2 bg-gray-50 dark:bg-card-color border border-gray-200 dark:border-border-color rounded-lg px-3">
+            <MentoringIcon size={13} className="text-gray-400 flex-shrink-0" />
+            <select
+              onChange={handleChange}
+              name="reason"
+              defaultValue={getprofile?.roll}
+              className="bg-transparent border-none outline-none text-sm py-2 w-full text-gray-700 dark:text-secondary-text-color"
+            >
+              <option value="freelancer">Freelancer</option>
+              <option value="employer">Employer</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Name */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color">Full Name</span>
+          <div className="flex items-center gap-2 bg-gray-50 dark:bg-card-color border border-gray-200 dark:border-border-color rounded-lg px-3">
+            <UserStar02Icon size={13} className="text-gray-400 flex-shrink-0" />
+            <input
+              onChange={handleChange}
+              name="name"
+              type="text"
+              defaultValue={getprofile?.name}
+              placeholder="Your name"
+              className="bg-transparent border-none outline-none text-sm py-2 w-full text-gray-700 dark:text-secondary-text-color placeholder:text-gray-300"
+            />
+          </div>
+        </div>
+
+        {/* Email */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color">Email</span>
+          <div className="flex items-center gap-2 bg-gray-50 dark:bg-card-color border border-gray-200 dark:border-border-color rounded-lg px-3">
+            <Mail01Icon size={13} className="text-gray-400 flex-shrink-0" />
+            <input
+              onChange={handleChange}
+              name="email"
+              type="email"
+              defaultValue={getprofile?.email}
+              placeholder="Email address"
+              className="bg-transparent border-none outline-none text-sm py-2 w-full text-gray-700 dark:text-secondary-text-color placeholder:text-gray-300"
+            />
+          </div>
+        </div>
+
+        {/* Password */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color">Password</span>
+          <div className="flex items-center gap-2 bg-gray-50 dark:bg-card-color border border-gray-200 dark:border-border-color rounded-lg px-3">
+            <LockPasswordIcon size={13} className="text-gray-400 flex-shrink-0" />
+            <input
+              onChange={handleChange}
+              name="password"
+              type="password"
+              placeholder="New password"
+              className="bg-transparent border-none outline-none text-sm py-2 w-full text-gray-700 dark:text-secondary-text-color placeholder:text-gray-300"
+            />
+          </div>
+        </div>
+
+        {/* Profile Photo */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color">Profile Photo</span>
+          <label className="flex items-center gap-2 bg-gray-50 dark:bg-card-color border border-dashed border-gray-300 dark:border-border-color rounded-lg px-3 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-border-color transition-colors">
+            <ImageAdd02Icon size={13} className="text-gray-400 flex-shrink-0" />
+            <span className="text-sm text-gray-400 dark:text-secondary-text-color truncate">
+              Click to upload image
+            </span>
+            <input
+              onChange={handleChange}
+              name="profileImage"
+              type="file"
+              accept="image/*"
+              className="hidden"
+            />
+          </label>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex gap-2 mt-1">
+          <button
+            type="button"
+            onClick={() => editefalse(false)}
+            className="flex-1 py-2 rounded-lg border border-gray-200 dark:border-border-color text-sm text-gray-500 dark:text-secondary-text-color hover:bg-gray-50 dark:hover:bg-card-color transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="flex-1 py-2 rounded-lg bg-[#534AB7] hover:bg-[#3C3489] text-white text-sm font-medium transition-colors"
+          >
+            {loader ? (
+              <div className="flex justify-center items-center">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : "Save Changes"}
+          </button>
+        </div>
+
+      </motion.form>
+    )}
+  </div>
+</div>
 
       {/* Main Content */}
       <div className="p-3 relative overflow-y-scroll lg:col-span-3  md:col-span-5 dark:bg-bg-dark bg-white w-full">
-        <nav className="dark:bg-bg-dark  bg-white w-full flex justify-around items-center border-b-2 dark:border-border-color border-gray-600 pb-3">
-          <div className="md:flex   lg:gap-3 md:justify-between hidden md:block items-center">
+     
+     
+     {/* headers */}
 
-            <h1 className="text-sm text-purple-500 dark:text-white font-bold"> Skill <span className="text-blue-900 dark:text-accent-color ">Bridge</span> </h1>
+        <nav className="bg-white dark:bg-bg-dark w-full flex items-center justify-between px-3 md:px-5 border-b dark:border-border-color border-gray-200 py-2.5 gap-2">
 
-          </div>
-          <div className="lg:w-2/6 md:w-2/7 items-center flex w-2/5  overflow-hidden relative">
-            <SearchVisualIcon
-              size={20}
-              className="absolute md:size-[20px] pl-1   size-[15px] hover:scale-110 duration-200 left-0 md:left-3 top-1/2 transform -translate-y-1/2 text-purple-500 dark:text-text-color cursor-pointer "
-            />
+  {/* Logo */}
+  <div className="hidden md:block flex-shrink-0">
+    <h1 className="text-sm font-bold">
+      <span className="text-purple-500 dark:text-white">Skill</span>
+      <span className="text-blue-900 dark:text-accent-color">Bridge</span>
+    </h1>
+  </div>
+
+  {/* Search Bar */}
+  <div className="flex-1 max-w-xs relative">
+    <SearchCircleIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-500 dark:text-text-color size-[14px] md:size-[16px]" />
+    <input
+      onChange={handlefilter}
+      type="text"
+      name="title"
+      placeholder="Search jobs..."
+      className="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-100 dark:bg-card-color dark:text-secondary-text-color rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 dark:focus:ring-accent-color"
+    />
+  </div>
+
+  {/* Right Actions */}
+  <div className="flex items-center gap-1.5">
+
+    {/* Filter Button */}
+    <div className="relative">
+      <button
+        onClick={() => { setFiltertrue(!filtertrue); menufalse(false); setthem(false); }}
+        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors
+          ${filtertrue
+            ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300"
+            : "bg-gray-100 dark:bg-card-color text-gray-700 dark:text-secondary-text-color hover:bg-gray-200 dark:hover:bg-border-color"
+          }`}
+      >
+        <FilterAddIcon className="size-[13px] md:size-[15px]" />
+        <span className="hidden md:inline">Filter</span>
+        {(filters.location !== "" || filters.minSalary !== "") && (
+          <span className="w-1.5 h-1.5 rounded-full bg-purple-500 dark:bg-accent-color" />
+        )}
+      </button>
+
+      {/* Filter Dropdown */}
+      {filtertrue && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: -4 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="absolute right-0 top-10 z-20 w-72 bg-white dark:bg-card-color border border-gray-200 dark:border-border-color rounded-2xl shadow-xl p-4 flex flex-col gap-3"
+        >
+          <p className="text-xs font-semibold text-gray-500 dark:text-secondary-text-color uppercase tracking-wide">Filter Jobs</p>
+
+          {/* Title */}
+          <div className="flex items-center gap-2 bg-gray-50 dark:bg-bg-dark border border-gray-200 dark:border-border-color rounded-lg px-3">
+            <JobSearchIcon className="size-[13px] text-purple-500 dark:text-secondary-text-color flex-shrink-0" />
             <input
               onChange={handlefilter}
               type="text"
               name="title"
-              className="bg-gray-100 dark:bg-card-color text-center w-full md:pl-10 md:pr-3 md:py-2 pl-2 py-1 text-xs placeholder:text-[12px] md:rounded rounded-md focus:outline-none dark:text-secondary-text-color"
-              placeholder="search........"
+              placeholder="Job title..."
+              className="bg-transparent outline-none text-sm py-2 w-full text-gray-700 dark:text-secondary-text-color placeholder:text-gray-300"
             />
-
           </div>
-          <div className="flex items-center  dark:bg-bg-dark bg-white w-2/3 justify-around">
-            <div onClick={() => {
 
-              menufalse(false)
-              setthem(false)
-            }} className={`${filtertrue ? "border-purple-500" : null} relative dark:bg-card-color flex gap-1  text-sm text-[15px] items-center cursor-pointer lg:gap-3 md:gap-2  dark:hover:bg-border-color duration-100 bg-gray-100 shadow-sm md:py-[6px]  lg:py-[8px] rounded-[7px] py-[5px] px-1`}>
+          {/* Job Type */}
+          <div className="flex items-center gap-2 bg-gray-50 dark:bg-bg-dark border border-gray-200 dark:border-border-color rounded-lg px-3">
+            <Location01Icon className="size-[13px] text-purple-500 dark:text-secondary-text-color flex-shrink-0" />
+            <select
+              name="location"
+              defaultValue={filters.location}
+              onChange={handlefilter}
+              className="bg-transparent outline-none text-sm py-2 w-full text-gray-700 dark:text-secondary-text-color"
+            >
+              <option value="">All job types</option>
+              <option value="work from Home">Work from Home</option>
+              <option value="work from office">Work from Office</option>
+            </select>
+          </div>
 
-              <h1 onClick={() => setFiltertrue(true)} className=" dark:text-secondary-text-color text-[10px] md:text-sm text-gray-800 font-bold">Filter</h1>
-              <div className={`absolute ${(filters.location !== "" || filters.minSalary !== "") ? "" : "hidden"} top-0 right-0 size-[5px] bg-purple-500 rounded-full`}></div>
-
-
-              <FilterAddIcon onClick={() => setFiltertrue(true)} className="md:size-[20px] size-[14px] dark:text-gray-300 text-gray-800" />
-              {filtertrue ?
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="dark:bg-card-color bg-white z-10 md:absolute fixed top-20 md:right-10 right-8 flex flex-col gap-4 w-72 border-2 border-gray-300 dark:border-border-color rounded-2xl p-5 shadow-xl"
-                >
-                  {/* Job Title */}
-                  <div className="flex items-center gap-2">
-                    <JobSearchIcon className="w-5 h-5 text-purple-600 dark:text-secondary-text-color" />
-                    <input
-                      onChange={handlefilter}
-                      type="text"
-                      name="title"
-                      placeholder="Search Job Title..."
-                      className="flex-1 py-1 px-2 dark:bg-secondary-text-color bg-gray-100 dark:text-card-color text-sm rounded-lg border border-gray-300 dark:border-border-color focus:outline-none focus:ring-2 focus:ring-purple-400"
-                    />
-                  </div>
-
-                  {/* Location */}
-                  <div className="flex items-center gap-2">
-                    <Location01Icon className="w-5 h-5 text-purple-600 dark:text-secondary-text-color" />
-                    <select
-                      name="location"
-                      defaultValue={filters.location}
-                      onChange={handlefilter}
-                      className="flex-1 py-1 px-2 text-sm rounded-lg border border-gray-300 dark:border-border-color dark:bg-secondary-text-color bg-gray-100 dark:text-card-color focus:outline-none focus:ring-2 focus:ring-purple-400"
-                    >
-                      <option value="">Select Job type</option>
-                      <option value="work from Home">Work from Home</option>
-                      <option value="work from office">Work from Office</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-secondary-text-color">
-                      Salary Range (₹)
-                    </label>
-                    <div className="flex items-center justify-between gap-2">
-                      <input
-                        type="number"
-                        name="minSalary"
-                        placeholder="Min"
-                        min={0}
-                        value={filters.minSalary || ""}
-                        onChange={handlefilter}
-                        className="w-full border rounded-lg px-2 py-1 text-sm dark:bg-secondary-text-color dark:text-card-color border-gray-300 dark:border-border-color"
-                      />
-
-                    </div>
-                    <input
-                      type="range"
-                      name="minSalary"
-                      min={0}
-                      max={100000}
-                      value={filters.minSalary}
-                      onChange={handlefilter}
-                      className="w-full mt-2 accent-purple-500 dark:accent-accent-color"
-                    />
-                    <p className="text-xs text-gray-500 dark:text-secondary-text-color">
-                      Selected minimum: ₹{filters.minSalary || 0}
-                    </p>
-                  </div>
-
-                  <div className="flex justify-between mt-4">
-
-                  </div>
-                  <div className="flex justify-between mt-4">
-                    <div
-                      onClick={() => {
-
-                        setFiltertrue(false);
-                      }}
-                      className="flex items-center gap-1 text-gray-700 dark:text-white bg-white dark:bg-transparent border border-orange-500 hover:bg-orange-100 dark:hover:bg-orange-900 rounded-xl px-4 py-1 text-sm"
-                    >
-                      <Cancel02Icon className="w-4 h-4" /> Cancel
-                    </div>
-                  </div>
-
-
-                </motion.div>
-                : null}
+          {/* Salary */}
+          <div className="flex flex-col gap-1.5">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-medium text-gray-500 dark:text-secondary-text-color">Min Salary</span>
+              <span className="text-xs font-semibold text-purple-600 dark:text-accent-color">₹{filters.minSalary || 0}</span>
             </div>
-
-
-            <div onClick={() => {
-              setthem(!showthem)
-              menufalse(false)
-              setFiltertrue(false)
-            }} tabIndex={0} className={` p-[5px] ${showthem ? "dark:border-accent-color border-purple-500" : ""} cursor-pointer  bg-gray-100 shadow-sm dark:bg-card-color dark:hover:bg-border-color hover:bg-gray-100 duration-100  items-center rounded md:rounded-[7px]  md:py-[9px]  md:px-3 `}>
-              {
-                options.find(opt => opt.label === selected)?.icon
-              }
+            <input
+              type="range"
+              name="minSalary"
+              min={0}
+              max={100000}
+              step={1000}
+              value={filters.minSalary || 0}
+              onChange={handlefilter}
+              className="w-full accent-purple-500 dark:accent-accent-color"
+            />
+            <div className="flex justify-between text-[10px] text-gray-400 dark:text-secondary-text-color">
+              <span>₹0</span>
+              <span>₹1,00,000</span>
             </div>
-            {showthem ?
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className=" absolute top-15 z-10 dark:bg-card-color bg-white overflow-hidden  rounded-xl shadow-lg w-fit h-fit ">
-                {options.map((opt, index) => (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setthem(false)
-                      toggleTheme(opt.label);
+          </div>
 
-
-                    }
-
-                    }
-                    className={` ${opt.label == "sun" ? "hover:bg-sky-300 duration-500  hover:text-orange-500" : "hover:bg-amber-950"} ${opt.label == "moon" ? "hover:bg-blue-950 duration-500 hover:text-sky-200" : ""} items-center gap-2 px-3 py-2  cursor-pointer`}
-                  >
-                    {opt.icon}
-                  </div>
-                ))}
-
-              </motion.div> : ""
-            }
-
-            <div
-              tabIndex={0}
-
+          {/* Actions */}
+          <div className="flex gap-2 pt-1">
+            <button
               onClick={() => {
-                menufalse(!menutrue)
-                setthem(false)
-                setFiltertrue(false)
-              }} className={` p-[5px] ${menutrue ? "border-purple-500" : null} flex relative cursor-pointer dark:bg-card-color     md:gap-3 bg-gray-100 shadow-sm   dark:hover:bg-border-color hover:bg-gray-100 duration-100 dark:border-border-color  md:py-[7px] rounded md:rounded-[7px] md:px-3`}>
-              <Menu01Icon className="size-[14px] dark:text-gray-300 md:size-[18px]" />
-
-
-
-            </div>
-            {menutrue ?
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-
-                className="absolute  right-10 mt-2 will-change-scroll top-16 flex flex-col gap-2 px-3 py-2 bg-white dark:bg-card-color   rounded-md shadow-lg transition-opacity duration-300 z-15 overflow-hidden">
-
-                <div onClick={() => {
-                  navigate("/freelancer/application", {
-                    state: { themtrue }
-                  })
-                }} className="flex gap-2 relative group items-center cursor-pointer">
-                  <NoteIcon className="text-[15px] dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-gray-700" />
-                  <h1 className="text-[15px] dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-gray-700" >your Application</h1>
-                </div>
-                <div onClick={() => {
-                  const senderId = getprofile._id
-
-                  navigate("/chatapp", {
-                    state: { themtrue, senderId }
-                  })
-                }} className="flex relative group gap-2 items-center cursor-pointer ">
-                  <Chatting01Icon className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" />
-                  <h1 className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" >Start chat</h1>
-                </div>
-                <div onClick={() => {
-                  setshowprofile(true)
-                  menufalse(false)
-
-                }} className="flex relative group gap-2 items-center md:hidden cursor-pointer ">
-                  <UserIcon className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" />
-                  <h1 className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" >User Profile</h1>
-                </div>
-                <div className="relative group flex gap-2 items-center cursor-pointer">
-                  <PolicyIcon className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" />
-                  <h1 className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" >Our Policy</h1>
-                </div>
-                <div onClick={() => {
-                  navigate("/freelancer/resume", {
-                    state: { themtrue, getprofile }
-                  })
-                }} className="relative group flex gap-2 items-center cursor-pointer">
-                  <NoteEditIcon className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" />
-                  <h1 className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" >Edit Resume</h1>
-
-                </div>
-                <div onClick={() => {
-                  tokenremove()
-                }} className="relative group flex gap-2 items-center cursor-pointer">
-                  <Logout02Icon className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" />
-                  <h1 className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" >Log out</h1>
-                </div>
-                <div className="relative group flex gap-2 items-center cursor-pointer">
-                  <HelpSquareIcon className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" />
-                  <h1 className="dark:group-hover:text-accent-color group-hover:text-purple-500 text-[15px] dark:text-secondary-text-color text-gray-700" >Help</h1>
-                </div>
-                <div className="relative group flex gap-2 items-center cursor-pointer">
-                  <CustomerService02Icon className="dark:group-hover:text-accent-color group-hover:text-purple-500 dark:text-secondary-text-color text-[15px] text-gray-700" />
-                  <h1 className="dark:group-hover:text-accent-color group-hover:text-purple-500 text-[15px] dark:text-secondary-text-color text-gray-700" > +91 8446411038</h1>
-                </div>
-              </motion.div> : ""
-            }
-
-
-
+                falsefilter({ title: '', location: '', minSalary: '' });
+                setPage(1);
+                falsedata([]);
+                setHasMore(true);
+                jobsdata(1, { title: '', location: '', minSalary: '' });
+              }}
+              className="flex-1 py-1.5 rounded-lg border border-gray-200 dark:border-border-color text-xs text-gray-500 dark:text-secondary-text-color hover:bg-gray-50 dark:hover:bg-bg-dark transition-colors"
+            >
+              Reset
+            </button>
+            <button
+              onClick={() => setFiltertrue(false)}
+              className="flex-1 py-1.5 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-xs font-medium transition-colors"
+            >
+              Apply
+            </button>
           </div>
-        </nav>
+        </motion.div>
+      )}
+    </div>
+
+    {/* Theme Toggle */}
+    <button
+      onClick={() => { setthem(!showthem); menufalse(false); setFiltertrue(false); }}
+      className={`p-1.5 rounded-lg transition-colors bg-gray-100 dark:bg-card-color hover:bg-gray-200 dark:hover:bg-border-color
+        ${showthem ? "ring-2 ring-purple-400 dark:ring-accent-color" : ""}`}
+    >
+      {options.find(opt => opt.label === selected)?.icon}
+    </button>
+
+    {showthem && (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="absolute top-14 right-16 z-20 bg-white dark:bg-card-color border border-gray-200 dark:border-border-color rounded-xl shadow-lg overflow-hidden"
+      >
+        {options.map((opt, index) => (
+          <div
+            key={index}
+            onClick={() => { setthem(false); toggleTheme(opt.label); }}
+            className={`flex items-center gap-2 px-4 py-2 cursor-pointer text-sm
+              ${opt.label === "sun"
+                ? "hover:bg-sky-50 dark:hover:bg-sky-900/20 text-gray-700 dark:text-secondary-text-color"
+                : "hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-gray-700 dark:text-secondary-text-color"
+              }`}
+          >
+            {opt.icon}
+            <span className="text-xs capitalize">{opt.label}</span>
+          </div>
+        ))}
+      </motion.div>
+    )}
+
+    {/* Menu Button */}
+    <div className="relative">
+      <button
+        onClick={() => { menufalse(!menutrue); setthem(false); setFiltertrue(false); }}
+        className={`p-1.5 rounded-lg transition-colors bg-gray-100 dark:bg-card-color hover:bg-gray-200 dark:hover:bg-border-color
+          ${menutrue ? "ring-2 ring-purple-400 dark:ring-accent-color" : ""}`}
+      >
+        <Menu01Icon className="size-[14px] md:size-[16px] dark:text-gray-300 text-gray-700" />
+      </button>
+
+      {menutrue && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: -4 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="absolute right-0 top-10 z-20 w-48 bg-white dark:bg-card-color border border-gray-200 dark:border-border-color rounded-xl shadow-xl overflow-hidden py-1"
+        >
+          {[
+            { icon: <NoteIcon className="size-[15px]" />, label: "Your Applications", onClick: () => navigate("/freelancer/application", { state: { themtrue } }) },
+            { icon: <Chatting01Icon className="size-[15px]" />, label: "Start Chat", onClick: () => navigate("/chatapp", { state: { themtrue, senderId: getprofile._id } }) },
+            { icon: <UserIcon className="size-[15px]" />, label: "User Profile", onClick: () => { setshowprofile(true); menufalse(false); }, mobile: true },
+            { icon: <PolicyIcon className="size-[15px]" />, label: "Our Policy", onClick: () => {} },
+            { icon: <NoteEditIcon className="size-[15px]" />, label: "Edit Resume", onClick: () => navigate("/freelancer/resume", { state: { themtrue, getprofile } }) },
+            { icon: <Logout02Icon className="size-[15px]" />, label: "Log Out", onClick: tokenremove },
+            { icon: <HelpSquareIcon className="size-[15px]" />, label: "Help", onClick: () => {} },
+            { icon: <CustomerService02Icon className="size-[15px]" />, label: "+91 8446411038", onClick: () => {} },
+          ].map((item, i) => (
+            <div
+              key={i}
+              onClick={item.onClick}
+              className={`flex items-center gap-2.5 px-3 py-2 cursor-pointer group transition-colors hover:bg-gray-50 dark:hover:bg-border-color ${item.mobile ? "md:hidden" : ""}`}
+            >
+              <span className="text-gray-500 dark:text-secondary-text-color group-hover:text-purple-500 dark:group-hover:text-accent-color">
+                {item.icon}
+              </span>
+              <span className="text-[13px] text-gray-700 dark:text-secondary-text-color group-hover:text-purple-500 dark:group-hover:text-accent-color">
+                {item.label}
+              </span>
+            </div>
+          ))}
+        </motion.div>
+      )}
+    </div>
+
+  </div>
+</nav>
 
 {/* the infinite scroll with the paggination of mongodb   */}
 
-        {truedata && truedata.length ? truedata.map((element) => (
-          <div
-            key={element._id}
-            className="w-full hover:scale-102 duration-200 max-w-xl  mx-auto px-3 md:px-7 py-2 md:py-6 dark:bg-card-color bg-white rounded-2xl shadow-xl border dark:border-border-color border-purple-200 my-3  md:my-10"
-          >
-            <div className="grid grid-cols-4">
-              <h1 className="text-2xl  overflow-hidden col-span-3 md:text-lg text-[15px]  font-bold text-orange-500 mb-2 md:mb-3 flex items-center gap-2">
-                {element.title}
-              </h1>
-              <img className="col-span-1 md:size-15 size-10 object-cover rounded-full" src={element.image} alt={element.image} />
-            </div>
-            <p
-              className={`dark:text-secondary-text-color text-[12px] md:text-sm text-gray-700 md:mb-4 mb-2 cursor-pointer transition-all duration-300 ${showFullDesc ? " break-words" : "truncate"
-                }`}
-              onClick={handleToggleDescription}
-              title="Click to toggle full description"
-            >
-              {element.canapply}
-            </p>
-            <div className="flex flex-wrap gap-2 md:gap-4 md:text-sm text-[12px] dark:text-text-color text-gray-800 mb-5">
-              <div className="flex items-center gap-1 md:gap-2">
-                <PermanentJobIcon className="size-[18px] md:size-[22px]" />
-                <span>{element.jobtype}</span>
-              </div>
-              <div className="flex items-center dark:text-text-color  gap-1 md:gap-2">
-                <CoinsDollarIcon className="dark:text-text-color size-[18px] md:size-[22px]" color="black" />
-                <span>₹{element.budget}</span>
-              </div>
-              <div className="flex justify-center overflow-hidden items-center  gap-1 md:gap-2">
-                <SkewIcon className="size-[18px] md:size-[22px]" />
-                <p
-                  className={`dark:text-text-color w-full f text-gray-800 mb-4 cursor-pointer transition-all duration-300 ${showAllSkills ? " break-words wrap-break-word " : "truncate"
-                    }`}
-                  onClick={() => setShowAllSkills(!showAllSkills)}
-                  title="Click to show all skills"
-                >
+       {truedata && truedata.length ? truedata.map((element) => (
+  <div
+    key={element._id}
+    className="w-full max-w-xl mx-auto my-3 md:my-5 bg-white dark:bg-card-color border border-gray-100 dark:border-border-color rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+  >
+    {/* Top colored strip */}
+    <div className="h-1 w-full bg-gradient-to-r from-purple-400 to-blue-400" />
 
-                  <span className="font-semibold dark:text-text-color text-gray-600">Skills:</span>{" "}
-                  {element.skill.join(", ")}
-                </p>
+    <div className="px-4 md:px-6 py-4">
 
-              </div>
-              <div className="flex items-center dark:text-secondary-text-color  gap-2 md:gap-4">
-                <Time01Icon color="black" className="dark:text-secondary-text-color size-[15px] md:size-[22px]" size={20} />
-                <p className="mdtext-sm text-[12px] dark:text-secondary-text-color text-gray-500">
-                  Posted on:{" "}
-                  {new Date(element.createdAt).toLocaleString("en-IN", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true
-                  })}
-                </p>
-                {element.active ? <h1 className="rounded-full  px-4 py-1 font-extrabold md:text-sm text-[10px]  text-blue-500" >Active hiring</h1> : ""}
-              </div>
-            </div>
+      {/* Header — title + image */}
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-[15px] md:text-lg font-bold text-orange-500 truncate">
+            {element.title}
+          </h1>
+          {element.active && (
+            <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-[10px] font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              Active Hiring
+            </span>
+          )}
+        </div>
+        <img
+          className="w-10 h-10 md:w-12 md:h-12 object-cover rounded-xl border border-gray-100 dark:border-border-color flex-shrink-0"
+          src={element.image}
+          alt={element.title}
+        />
+      </div>
 
-            <div className="flex justify-center items-center pt-1 md:pt-4 border-t dark:border-border-color border-gray-200">
-              <button
-                onClick={() => {
-                  setSelectedJob(element);
-                  getpage(true);
-                }}
-                className=" cursor-pointer bg-purple-400 text-white dark:bg-secondary-text-color dark:text-card-color rounded-2xl dark:hover:bg-text-color hover:bg-purple-500 md:text-lg text-[12px] px-3 md:px-6 py-1 md:py-2 duration-200"
-              >
-                View
-              </button>
-            </div>
-          </div>
-        )) : <p className="text-center text-gray-400 dark:text-secondary-text-color py-10 text-sm">
-    No jobs found 
-  </p>
-        }
+      {/* Description */}
+      <p
+        className={`text-[12px] md:text-sm text-gray-500 dark:text-secondary-text-color mb-3 cursor-pointer transition-all duration-300 leading-relaxed ${showFullDesc ? "break-words" : "line-clamp-2"}`}
+        onClick={handleToggleDescription}
+        title="Click to expand"
+      >
+        {element.canapply}
+      </p>
+
+      {/* Info Pills */}
+      <div className="flex flex-wrap gap-2 mb-3">
+
+        {/* Job Type */}
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300 text-[11px] font-medium">
+          <PermanentJobIcon className="size-[12px]" />
+          {element.jobtype}
+        </div>
+
+        {/* Budget */}
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-300 text-[11px] font-medium">
+          <CoinsDollarIcon className="size-[12px]" />
+          ₹{element.budget}
+        </div>
+
+        {/* Posted date */}
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-50 dark:bg-bg-dark text-gray-500 dark:text-secondary-text-color text-[11px]">
+          <Time01Icon className="size-[12px]" />
+          {new Date(element.createdAt).toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}
+        </div>
+
+      </div>
+
+      {/* Skills */}
+      <div
+        className={`flex items-start gap-1.5 mb-4 cursor-pointer`}
+        onClick={() => setShowAllSkills(!showAllSkills)}
+      >
+        <SkewIcon className="size-[13px] text-gray-400 dark:text-secondary-text-color mt-0.5 flex-shrink-0" />
+        <p className={`text-[11px] md:text-xs text-gray-500 dark:text-secondary-text-color leading-relaxed ${showAllSkills ? "break-words" : "truncate"}`}>
+          <span className="font-semibold text-gray-600 dark:text-text-color">Skills: </span>
+          {element.skill.join(", ")}
+        </p>
+      </div>
+
+      {/* Footer — View Button */}
+      <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-border-color">
+        <p className="text-[10px] text-gray-400 dark:text-secondary-text-color">
+          {new Date(element.createdAt).toLocaleString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+          })}
+        </p>
+        <button
+          onClick={() => { setSelectedJob(element); getpage(true); }}
+          className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-purple-500 hover:bg-purple-600 dark:bg-accent-color dark:hover:bg-accent-light text-white text-[12px] md:text-sm font-medium transition-colors duration-200"
+        >
+          View Job
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+)) : (
+  <div className="flex flex-col items-center justify-center py-20 gap-3">
+    <div className="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-card-color flex items-center justify-center">
+      <SearchVisualIcon className="size-[24px] text-gray-300 dark:text-secondary-text-color" />
+    </div>
+    <p className="text-sm font-medium text-gray-400 dark:text-secondary-text-color">No jobs found</p>
+    <p className="text-xs text-gray-300 dark:text-secondary-text-color">Try changing your filters</p>
+  </div>
+)}
         <div ref={bottomRef} />
 
         {jobsLoading && (
@@ -1000,103 +1012,158 @@ const handlefilter = (e) => {
           </p>
         )}
 
-        {showpage && selectedJob && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.2 }}
-            className="fixed z-50 top-0 left-0 h-screen w-screen bg-black/40 backdrop-blur-sm flex justify-center items-center"
+       {showpage && selectedJob && (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="fixed z-50 inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-end md:items-center px-0 md:px-4"
+    onClick={() => getpage(false)}
+  >
+    <motion.div
+      initial={{ y: 60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: 60, opacity: 0 }}
+      transition={{ type: "spring", damping: 25, stiffness: 300 }}
+      onClick={(e) => e.stopPropagation()}
+      className="w-full md:w-2/3 md:max-w-2xl max-h-[92vh] md:max-h-[88vh] overflow-y-auto bg-white dark:bg-bg-dark rounded-t-3xl md:rounded-3xl shadow-2xl border border-gray-100 dark:border-border-color"
+    >
+
+      {/* Top drag indicator — mobile */}
+      <div className="flex justify-center pt-3 pb-1 md:hidden">
+        <div className="w-10 h-1 rounded-full bg-gray-200 dark:bg-border-color" />
+      </div>
+
+      {/* Header */}
+      <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-3 bg-white/90 dark:bg-bg-dark/90 backdrop-blur border-b border-gray-100 dark:border-border-color">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-5 rounded-full bg-purple-500" />
+          <span className="text-[13px] font-semibold text-gray-700 dark:text-text-color truncate max-w-[200px]">
+            {selectedJob.title}
+          </span>
+        </div>
+        <button
+          onClick={() => getpage(false)}
+          className="w-7 h-7 rounded-lg bg-gray-100 dark:bg-card-color flex items-center justify-center text-gray-500 dark:text-secondary-text-color hover:bg-gray-200 dark:hover:bg-border-color transition-colors"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div className="p-5 flex flex-col gap-5">
+
+        {/* Title + Image */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl md:text-2xl font-bold text-orange-500 leading-tight">
+              {selectedJob.title}
+            </h1>
+            <p className="text-xs text-gray-400 dark:text-secondary-text-color mt-1">
+              Exciting opportunity awaits!
+            </p>
+            {selectedJob.active && (
+              <span className="inline-flex items-center gap-1 mt-2 px-2.5 py-1 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-[11px] font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                Active Hiring
+              </span>
+            )}
+          </div>
+          <img
+            className="w-14 h-14 md:w-16 md:h-16 object-cover rounded-2xl border border-gray-100 dark:border-border-color shadow-sm flex-shrink-0"
+            src={selectedJob.image}
+            alt="Company Logo"
+          />
+        </div>
+
+        {/* Info Cards */}
+        <div className="grid grid-cols-3 gap-2">
+          <div className="flex flex-col items-center gap-1 p-3 bg-purple-50 dark:bg-purple-900/15 rounded-xl">
+            <Home02Icon className="size-[18px] text-purple-500 dark:text-purple-300" />
+            <span className="text-[11px] font-medium text-purple-700 dark:text-purple-300 text-center leading-tight">
+              {selectedJob.jobtype}
+            </span>
+          </div>
+          <div className="flex flex-col items-center gap-1 p-3 bg-green-50 dark:bg-green-900/15 rounded-xl">
+            <DollarCircleIcon className="size-[18px] text-green-600 dark:text-green-400" />
+            <span className="text-[11px] font-medium text-green-700 dark:text-green-300 text-center">
+              ₹{selectedJob.budget}
+            </span>
+          </div>
+          <div className="flex flex-col items-center gap-1 p-3 bg-blue-50 dark:bg-blue-900/15 rounded-xl">
+            <UserSquareIcon className="size-[18px] text-blue-600 dark:text-blue-300" />
+            <span className="text-[11px] font-medium text-blue-700 dark:text-blue-300 text-center leading-tight">
+              {selectedJob.opportunity}
+            </span>
+          </div>
+        </div>
+
+        {/* Skills */}
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color">
+            Required Skills
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            {selectedJob.skill.map((skill, i) => (
+              <span
+                key={i}
+                className="px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-card-color text-gray-600 dark:text-secondary-text-color text-[11px] font-medium"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Can Apply */}
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color">
+            Who Can Apply
+          </span>
+          <div className="bg-sky-50 dark:bg-border-color rounded-xl p-4 text-[12px] md:text-sm text-gray-700 dark:text-secondary-text-color leading-relaxed max-h-[150px] overflow-y-auto">
+            {selectedJob.canapply}
+          </div>
+        </div>
+
+        {/* About Company */}
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color">
+            About Company
+          </span>
+          <div className="bg-orange-50 dark:bg-border-color rounded-xl p-4 text-[12px] md:text-sm text-gray-700 dark:text-secondary-text-color leading-relaxed max-h-[150px] overflow-y-auto">
+            {selectedJob.description}
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-3 pt-2 pb-2">
+          <button
+            onClick={() => getpage(false)}
+            className="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-border-color text-sm text-gray-600 dark:text-secondary-text-color hover:bg-gray-50 dark:hover:bg-card-color transition-colors"
           >
-            <div className="md:w-2/3 h-full  rounded-2xl overflow-y-auto dark:bg-bg-dark bg-white shadow-2xl border dark:border-border-color border-gray-300">
+            Close
+          </button>
+          <button
+            onClick={() => {
+              navigate("/freelancer/apply", {
+                state: { themtrue, jobid: selectedJob._id },
+              });
+            }}
+            className="flex-1 py-2.5 rounded-xl bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+          >
+            Apply Now
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
 
-              <div className="flex justify-between items-center px-5 py-4 rounded-t-2xl bg-purple-100 dark:bg-border-color border-b-2 border-gray-400 dark:border-border-color">
-                <h1 className="text-purple-600 text-sm   dark:text-text-color font-semibold md:text-lg">
-                  Applying to {selectedJob.title}
-                </h1>
-                <button
-                  onClick={() => getpage(!showpage)}
-                  className="text-gray-600 hover:text-black text-sm md:text-xl"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="w-full h-fit p-6 flex flex-col gap-6 dark:bg-card-color bg-white">
-
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <h1 className="md:text-3xl font-bold text-sm  text-orange-500">{selectedJob.title}</h1>
-                    <p className="md:text-sm text-[12px] text-gray-500 mt-1">Exciting opportunity awaits!</p>
-                  </div>
-                  <img
-                    className="md:w-20 md:h-20 w-10 h-10 object-cover rounded-full shadow-md border"
-                    src={selectedJob.image}
-                    alt="Company Logo"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="flex items-center gap-3 md:p-4 p-2 bg-purple-50 rounded-sm md:rounded-xl shadow-sm">
-                    <Home02Icon className="md:size-[24px] size-[18px] " color="darkpink" />
-                    <span className="text-gray-800 font-medium">{selectedJob.jobtype}</span>
-                  </div>
-                  <div className="flex items-center gap-3  md:p-4 p-2 bg-green-50 rounded-sm md:rounded-xl shadow-sm">
-                    <DollarCircleIcon className="md:size-[24px] size-[18px] " color="green" />
-                    <span className="text-gray-800 font-medium">₹{selectedJob.budget}</span>
-                  </div>
-                  <div className="flex items-center gap-3 md:p-4 p-2 bg-blue-50 rounded-sm md:rounded-xl shadow-sm">
-                    <UserSquareIcon className="md:size-[24px] size-[18px] " color="black" />
-                    <span className="text-gray-800 font-medium">{selectedJob.opportunity}</span>
-                  </div>
-                </div>
-
-                {/* Can Apply */}
-                <div className="bg-sky-100 dark:bg-border-color p-3 md:p-5 rounded-xl shadow-inner text-gray-800 dark:text-secondary-text-color text-[12px] md:text-sm max-h-[200px] overflow-y-auto">
-                  <p>{selectedJob.canapply}</p>
-                </div>
-
-                {/* Active Hiring & Skills */}
-                <div className="flex flex-wrap gap-3">
-                  <span className="bg-blue-100 text-blue-700 font-bold px-[7px] text-[12px] md:px-3 md:py-1 py-[3px] rounded-2xl md:rounded-full  ">
-                    Active Hiring
-                  </span>
-                  <span className="bg-gray-200 md:text-sm whitespace-pre-wrap break-words text-[12px] text-gray-700 px-3 py-1 rounded-2xl md:rounded-full">
-                    Skills: {selectedJob.skill.join(", ")}
-                  </span>
-                </div>
-
-                {/* About Company */}
-                <div className="bg-orange-50 text-[12px] md:text-sm whitespace-pre-wrap break-words dark:bg-border-color md:p-5 p-3 rounded-xl shadow-inner text-sm text-gray-800 dark:text-secondary-text-color max-h-[200px] overflow-y-auto">
-                  <span className="font-semibold text-[12px] md:text-sm text-orange-500 dark:text-text-color">
-                    About Company:
-                  </span>{" "}
-                  {selectedJob.description}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex justify-end gap-4 mt-4">
-                  <button
-                    onClick={() => getpage(!showpage)}
-                    className="text-sm bg-white hover:bg-gray-200 rounded-2xl px-4 py-2 border border-gray-300"
-                  >
-                    Close
-                  </button>
-                  <button
-                    onClick={() => {
-                      const jobid = selectedJob._id;
-                      navigate("/freelancer/apply", {
-                        state: { themtrue, jobid },
-                      });
-                    }}
-                    className="text-sm bg-purple-500 hover:bg-purple-600 text-white border-2 border-purple-500 rounded-2xl px-4 py-2"
-                  >
-                    Apply
-                  </button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
+      </div>
+    </motion.div>
+  </motion.div>
+)}
        
 
 
@@ -1107,120 +1174,189 @@ const handlefilter = (e) => {
 
 
 
-        {
-          showNotification && (
-            <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50">
-              <div className="flex items-center gap-3 bg-purple-600 text-white px-5 py-2 rounded-2xl shadow-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  className="w-5 h-5 text-white"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M12 4.5c.667 0 1.333.167 2 .5a7.5 7.5 0 11-4 0c.667-.333 1.333-.5 2-.5z" />
-                </svg>
-                <span className="text-sm font-medium">Action completed successfully!</span>
-              </div>
+       {showNotification && (
+  <motion.div
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}
+    className="fixed top-5 left-1/2 -translate-x-1/2 z-50"
+  >
+    <div className="flex items-center gap-3 bg-white dark:bg-card-color border border-green-200 dark:border-green-800 px-4 py-3 rounded-2xl shadow-lg">
+      {/* Green check circle */}
+      <div className="w-7 h-7 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-green-500">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      </div>
+
+      {/* Text */}
+      <div className="flex flex-col">
+        <span className="text-[13px] font-semibold text-gray-800 dark:text-text-color">Success!</span>
+        <span className="text-[11px] text-gray-500 dark:text-secondary-text-color">Action completed successfully</span>
+      </div>
+
+      {/* Progress bar */}
+      <div className="absolute bottom-0 left-0 h-[3px] rounded-b-2xl bg-green-400 dark:bg-green-500"
+        style={{ animation: "shrink 3s linear forwards" }}
+      />
+    </div>
+
+    <style>{`
+      @keyframes shrink {
+        from { width: 100%; }
+        to { width: 0%; }
+      }
+    `}</style>
+  </motion.div>
+)}
+
+
+     <div className="w-full bg-white dark:bg-card-color rounded-2xl border border-gray-100 dark:border-border-color overflow-hidden">
+
+  {/* Header */}
+  <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-border-color">
+    <div>
+      <h1 className="text-sm font-semibold text-gray-800 dark:text-text-color">Reviews</h1>
+      <p className="text-[11px] text-gray-400 dark:text-secondary-text-color mt-0.5">{getreview.length} total reviews</p>
+    </div>
+    <motion.button
+      onClick={() => reviewfalse(!reviewtrue)}
+      whileTap={{ scale: 0.85, rotate: 90 }}
+      transition={{ type: "spring", duration: 0.4 }}
+      className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors duration-200 ${
+        reviewtrue
+          ? "bg-red-100 dark:bg-red-900/20 text-red-500"
+          : "bg-purple-100 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300"
+      }`}
+    >
+      {reviewtrue
+        ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        : <PlusSignIcon className="w-4 h-4" />
+      }
+    </motion.button>
+  </div>
+
+  {/* Add Review Form */}
+  <AnimatePresence>
+    {reviewtrue && (
+      <motion.div
+        key="review-box"
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: "auto" }}
+        exit={{ opacity: 0, height: 0 }}
+        transition={{ duration: 0.25 }}
+        className="overflow-hidden"
+      >
+        <div className="px-5 py-4 bg-gray-50 dark:bg-bg-dark border-b border-gray-100 dark:border-border-color flex flex-col gap-3">
+
+          {/* Star Rating */}
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color">Rating (0–5)</span>
+            <div className="flex items-center gap-2 bg-white dark:bg-card-color border border-gray-200 dark:border-border-color rounded-lg px-3">
+              <StarIcon className="w-3.5 h-3.5 text-orange-400 flex-shrink-0" />
+              <input
+                onChange={handlereview}
+                type="number"
+                name="rate"
+                max={5}
+                min={0}
+                placeholder="e.g. 4"
+                className="bg-transparent outline-none text-sm py-2 w-full text-gray-700 dark:text-secondary-text-color placeholder:text-gray-300"
+              />
             </div>
-          )
-        }
-
-
-        <div className="w-full h-fit dark:bg-card-color bg-white p-4 rounded-xl shadow-md">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-bold dark:text-text-color text-gray-800">Reviews</h1>
-
-            <motion.div
-              onClick={() => reviewfalse(!reviewtrue)}
-              whileTap={{
-                scale: 0.8,
-                rotate: 180
-              }}
-              transition={{ type: "spring", duration: 0.5 }}
-              className="cursor-pointer bg-purple-500 hover:bg-purple-600 text-white p-2 rounded-full shadow transition duration-200"
-              title="Add Review"
-            >
-              <PlusSignIcon className="w-5 h-5" />
-            </motion.div>
           </div>
 
-          <AnimatePresence>
-            {reviewtrue && (
-              <motion.div
-                key="review-box"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
-                transition={{ duration: 0.3 }}
-                className="w-full flex flex-col gap-3 mb-6"
-              >
-                <input
-                  placeholder="Rate Project (0 to 5)"
-                  onChange={handlereview}
-                  className="p-2 rounded-lg border border-gray-300 dark:border-border-color dark:bg-border-color dark:text-text-color outline-none"
-                  type="number"
-                  name="rate"
-                  max={5}
-                  min={0}
-                />
-                <textarea
-                  onChange={handlereview}
-                  rows="4"
-                  name="Comment"
-                  placeholder="Write your review..."
-                  className="p-2 rounded-lg border border-gray-300 dark:border-border-color dark:bg-border-color dark:text-text-color outline-none"
-                ></textarea>
-                <button
-                  onClick={() => {
-                    PostReview();
-                    window.location.reload();
-                  }}
-                  className="self-end bg-purple-500 hover:bg-purple-600 text-white font-semibold px-4 py-2 rounded-lg"
-                >
-                  Send
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <div className="flex flex-wrap gap-4 justify-center px-4">
-            {reviewdata.length > 0 ? reviewdata.map((element, index) => {
-              return (
-                <div
-                  key={index}
-                  className="w-full sm:w-[300px] md:w-[350px] bg-white dark:bg-border-color rounded-xl shadow-md p-4"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="font-semibold text-gray-800 dark:text-text-color">{element.name}</p>
-                    <img
-                      src={element.profileImage}
-                      alt="profile"
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-start text-sm text-orange-600 mb-2">
-                    <StarIcon className="w-4 h-4 mr-1" />
-                    {element.rate}
-                  </div>
-
-                  <p className="text-gray-700 dark:text-secondary-text-color break-words whitespace-normal text-sm">
-                    {element.Comment}
-                  </p>
-
-                </div>
-              );
-            }) : (
-              null
-            )}
+          {/* Comment */}
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color">Your Review</span>
+            <textarea
+              onChange={handlereview}
+              rows="3"
+              name="Comment"
+              placeholder="Share your experience..."
+              className="bg-white dark:bg-card-color border border-gray-200 dark:border-border-color rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-secondary-text-color placeholder:text-gray-300 outline-none resize-none focus:ring-2 focus:ring-purple-300 dark:focus:ring-accent-color"
+            />
           </div>
 
-          <div onClick={() => setShowAll(!showAll)} className="w-full md:py-3 py-2 text-gray-500 self-center border-b-2 dark:border-border-color border-gray-500 flex items-center justify-center dark:text-gray-400 "> view all</div>
-
+          {/* Submit */}
+          <button
+            onClick={() => { PostReview(); window.location.reload(); }}
+            className="self-end flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500 hover:bg-purple-600 text-white text-xs font-medium transition-colors"
+          >
+            Submit Review
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
         </div>
+      </motion.div>
+    )}
+  </AnimatePresence>
 
+  {/* Reviews List */}
+  <div className="p-4 flex flex-col gap-3">
+    {reviewdata.length > 0 ? reviewdata.map((element, index) => (
+      <div
+        key={index}
+        className="flex gap-3 p-3 rounded-xl bg-gray-50 dark:bg-bg-dark border border-gray-100 dark:border-border-color hover:border-purple-200 dark:hover:border-border-color transition-colors"
+      >
+        {/* Avatar */}
+        {element.profileImage ? (
+          <img
+            src={element.profileImage}
+            alt="profile"
+            className="w-9 h-9 rounded-xl object-cover flex-shrink-0"
+          />
+        ) : (
+          <div className="w-9 h-9 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0">
+            <span className="text-purple-600 dark:text-purple-300 text-sm font-bold">
+              {element.name?.charAt(0)?.toUpperCase()}
+            </span>
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-[13px] font-semibold text-gray-800 dark:text-text-color truncate">{element.name}</p>
+            {/* Stars */}
+            <div className="flex items-center gap-0.5 flex-shrink-0">
+              {[1,2,3,4,5].map((star) => (
+                <svg key={star} width="11" height="11" viewBox="0 0 24 24"
+                  fill={star <= element.rate ? "#f97316" : "none"}
+                  stroke="#f97316" strokeWidth="2"
+                >
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              ))}
+            </div>
+          </div>
+          <p className="text-[12px] text-gray-500 dark:text-secondary-text-color break-words leading-relaxed">
+            {element.Comment}
+          </p>
+        </div>
+      </div>
+    )) : (
+      <div className="flex flex-col items-center py-8 gap-2">
+        <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-border-color flex items-center justify-center">
+          <StarIcon className="w-5 h-5 text-gray-300" />
+        </div>
+        <p className="text-xs text-gray-400 dark:text-secondary-text-color">No reviews yet</p>
+      </div>
+    )}
+  </div>
+
+  {/* View All */}
+  {getreview.length > 4 && (
+    <button
+      onClick={() => setShowAll(!showAll)}
+      className="w-full py-3 text-xs font-medium text-purple-500 dark:text-accent-color hover:bg-purple-50 dark:hover:bg-card-color border-t border-gray-100 dark:border-border-color transition-colors"
+    >
+      {showAll ? "Show less" : `View all ${getreview.length} reviews`}
+    </button>
+  )}
+
+</div>
 
 
 
