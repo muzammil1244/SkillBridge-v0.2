@@ -1,6 +1,6 @@
 import Job from "../models/Job.js";
 import User from "../models/User.js";
-
+import { uploadToCloudinary } from "../middleware/multersetup.js";
 
 export const jobcreate = async (req, res) => {
   try {
@@ -16,8 +16,15 @@ export const jobcreate = async (req, res) => {
       opportunity,
       active,
     } = req.body;
-
+console.log("yes one")
     const parsedSkills = typeof skill === "string" ? JSON.parse(skill) : skill;
+ let profileImage = null
+      if(req.file){
+
+     profileImage = req.file ? await uploadToCloudinary(req.file.buffer,"skillbridgev0.2"):"" ;
+
+      }
+      console.log("yes two")
 
     const jobdata = new Job({
       title,
@@ -31,10 +38,13 @@ export const jobcreate = async (req, res) => {
       canapply,
       opportunity,
       active: active === "true",
-      image: req.file ? req.file.filename : null,
+      image:profileImage,
     });
+console.log("yes three")
 
     await jobdata.save();
+    console.log("yes four")
+
     res.status(200).send(jobdata);
   } catch (err) {
     console.error("Job create error:", err.message);
@@ -47,11 +57,9 @@ export const jobcreate = async (req, res) => {
 export const Applyjob = async (req, res) => {
 
   const identy = req.params.jobId
-  console.log("Job ID from request:", req.params.jobId);
 
   const job = await Job.findById(identy)
 
-  console.log(job)
 
   if (!job) {
 

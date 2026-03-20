@@ -37,8 +37,8 @@ const [showPassword, setShowPassword] = useState(false);
 
    try {
          console.log("yesss")
-
-    const response = await fetch("https://skillbridge-x62a.onrender.com/api/auth/register", {
+console.log("vit api ",import.meta.env.VITE_API_URL)
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
       method: "POST",
       body: realFormData, // ✅ Don't stringify
     });

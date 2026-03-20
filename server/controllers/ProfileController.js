@@ -2,6 +2,8 @@ import { json } from "express"
 import Job from "../models/Job.js"
 import User from "../models/User.js"
 import bcrypt from "bcrypt"
+import { uploadToCloudinary } from "../middleware/multersetup.js";
+
 export const employer=async(req,res)=>{
 
     const myjobs = await Job.find({createBy:req.user.userID})
@@ -55,8 +57,12 @@ export const UpdateProfile = async (req, res) => {
   }
 
   const { name, email, password, roll } = req.body;
-  const profileImage = req.file?.filename;
+ let profileImage = null
+      if(req.file){
 
+     profileImage = req.file ? await uploadToCloudinary(req.file.buffer,"skillbridgev0.2"):"" ;
+
+      }
   const updateData = {};
 
   if (typeof name === "string" && name.trim() !== "") {

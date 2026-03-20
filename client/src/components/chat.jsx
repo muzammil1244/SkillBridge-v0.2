@@ -21,7 +21,7 @@ export default function ChatApp() {
   const conversationId = location.state?.conversationId;
   const messageref = useRef(null);
   useEffect(() => {
-    const socketInstance = io("https://skillbridge-x62a.onrender.com");
+    const socketInstance = io(`${import.meta.env.VITE_API_URL}`);
     setsocket(socketInstance);
     if (senderId) socketInstance.emit("addUser", senderId);
 
@@ -55,7 +55,7 @@ export default function ChatApp() {
   const fetchConversation = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`https://skillbridge-x62a.onrender.com/api/conversation/list/${senderId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/conversation/list/${senderId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ export default function ChatApp() {
   const fetchMessage = async (conversationId, user) => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`https://skillbridge-x62a.onrender.com/api/message/${conversationId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/message/${conversationId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -97,7 +97,7 @@ export default function ChatApp() {
   if (file) formData.append("file", file);
 
   try {
-    const response = await fetch('https://skillbridge-x62a.onrender.com/api/message', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/message`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,

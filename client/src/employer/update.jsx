@@ -107,7 +107,7 @@ const updateID = job._id
   const token = localStorage.getItem("token");
 
   try {
-    await fetch(`https://skillbridge-x62a.onrender.com/api/employer/update/${updateID}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/employer/update/${updateID}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,

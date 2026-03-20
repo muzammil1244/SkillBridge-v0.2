@@ -30,14 +30,14 @@ const app = express();
 
 const server = http.createServer(app)
 app.use(cors({
-  origin: "https://skillbridge-inky.vercel.app", 
+  origin: "http://localhost:3000", 
   credentials: true,
 }));
 
 let users = []
 const io = new Server(server, {
   cors: {
-    origin: "https://skillbridge-inky.vercel.app", 
+    origin: "http://localhost:3000", 
     methods: ["GET", "POST"],
   },
 });
@@ -130,4 +130,4 @@ app.use("/review",reviewroutes)
 app.use("/api",Chat)
 
 const PORT = process.env.portnum || 5000;
-  server.listen(PORT,()=>console.log('server is started'))
+  server.listen(PORT,()=>console.log('server is started',PORT))

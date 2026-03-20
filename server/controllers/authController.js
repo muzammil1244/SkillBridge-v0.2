@@ -1,17 +1,25 @@
 import  User  from "../models/User.js";
 import { compare, hash } from "bcrypt";
 import jwt from "jsonwebtoken";
+import { uploadToCloudinary } from "../middleware/multersetup.js";
+
+// register with profile image 
 
 export async function register(req, res) {
-      const { name, email, password , roll } = req.body;
-    const profileImage = req.file ? req.file.filename :null ;
-console.log(name, email, password , roll,profileImage
 
-)
+      
+
+
   try {
     const { name, email, password , roll } = req.body;
-    const hashedPassword = await hash(password, 10);
+    let profileImage = null
+      if(req.file){
 
+     profileImage = req.file ? await uploadToCloudinary(req.file.buffer,"skillbridgev0.2"):"" ;
+
+      }
+    const hashedPassword = await hash(password, 10);
+console.log( name, email, hashedPassword, roll,profileImage)
 
     const user = new User({ name, email, password: hashedPassword, roll,profileImage});
     await user.save();

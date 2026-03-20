@@ -1,4 +1,5 @@
 import Job from "../models/Job.js"; // ✅ Make sure it's imported
+import { uploadToCloudinary } from "../middleware/multersetup.js";
 
 export const updateApplicantStatus = async (req, res) => {
   const { jobId, freelancerId } = req.params;

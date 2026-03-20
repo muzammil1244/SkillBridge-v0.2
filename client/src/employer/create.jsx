@@ -72,7 +72,7 @@ sertloader(true)
         formData.append("image", jobData.image);
       }
 
-      const response = await fetch("https://skillbridge-x62a.onrender.com/api/jobcreate", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/jobcreate`, {
         method: "POST",
         headers:{
 "Authorization":`Bearer ${token}`
