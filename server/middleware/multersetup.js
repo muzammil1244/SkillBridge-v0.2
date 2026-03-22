@@ -18,7 +18,10 @@ export const upload = multer({ storage });
 export const uploadToCloudinary = (fileBuffer, folder) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream(
-      { folder: folder || "skillbridge/profiles",
+
+     { folder: folder || "skillbridge/profiles",
+       resource_type: "raw",      // ✅ PDF ke liye raw chahiye
+        format: "pdf",
         transformation: [{ width: 500, height: 500, crop: "fill" }]
       },
       (error, result) => {

@@ -1,45 +1,57 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
+import { ArrowLeft02Icon, PlusSignIcon, Cancel01Icon, ImageAdd02Icon, CheckmarkCircle01Icon, Edit01Icon } from "hugeicons-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { ArrowLeft01Icon, ArrowLeft03Icon, ArrowLeft04Icon } from "hugeicons-react"
-import { useLocation, useNavigate } from "react-router-dom"
-export  function 
-
-
-Update() {
-  const navigate = useNavigate()
-const [jobData, setJobData] = useState({
-  title: "",
-  description: "",
-  skill: [],
-  budget: "",
-  deadline: "",
-  jobtype: "work from Home",
-  salary: "",
-  canapply: "",
-  opportunity: "",
-  active: false,       
-  imageFile: null        
-});
-
-const [loader ,setloader]= useState(false)
+export function Update() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [loader, setloader] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
   const [skillInput, setSkillInput] = useState("");
 
-const handleChange = (e) => {
-  const { name, value, type, files, checked } = e.target;
+  const job = location?.state?.element;
+  const updateID = job._id;
 
-  if (type === "file") {
-    setJobData((prev) => ({ ...prev, imageFile: files[0] }));
-  } else if (type === "checkbox") {
-    setJobData((prev) => ({ ...prev, [name]: checked }));
-  } else {
-    setJobData((prev) => ({ ...prev, [name]: value }));
-  }
-};
+  const [jobData, setJobData] = useState({
+    title: "", description: "", skill: [], budget: "",
+    deadline: "", jobtype: "work from Home", salary: "",
+    canapply: "", opportunity: "", active: false, imageFile: null
+  });
 
+  useEffect(() => {
+    if (job) {
+      setJobData({
+        title: job.title || "",
+        description: job.description || "",
+        skill: job.skill || [],
+        budget: job.budget || "",
+        deadline: job.deadline?.slice(0, 10) || "",
+        jobtype: job.jobtype || "work from Home",
+        salary: job.salary || "",
+        canapply: job.canapply || "",
+        opportunity: job.opportunity || "",
+        active: job.active || false,
+        imageFile: null,
+      });
+      if (job.image) setImagePreview(job.image);
+    }
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value, type, files, checked } = e.target;
+    if (type === "file") {
+      setJobData(prev => ({ ...prev, imageFile: files[0] }));
+      setImagePreview(URL.createObjectURL(files[0]));
+    } else if (type === "checkbox") {
+      setJobData(prev => ({ ...prev, [name]: checked }));
+    } else {
+      setJobData(prev => ({ ...prev, [name]: value }));
+    }
+  };
 
   const addSkill = () => {
     if (skillInput.trim() !== "") {
-      setJobData({ ...jobData, skill: [...jobData.skill, skillInput] });
+      setJobData({ ...jobData, skill: [...jobData.skill, skillInput.trim()] });
       setSkillInput("");
     }
   };
@@ -50,258 +62,239 @@ const handleChange = (e) => {
     setJobData({ ...jobData, skill: newSkills });
   };
 
- 
-
-  const location = useLocation()
-
-
-const job = location?.state?.element;
-
-const updateID = job._id
-  // updata jobs
-
-  useEffect(() => {
-  if (job) {
-    setJobData({
-      title: job.title || "",
-      description: job.description || "",
-      skill: job.skill || [],
-      budget: job.budget || "",
-      deadline: job.deadline?.slice(0, 10) || "", // ✅ Date ko format karo
-      jobtype: job.jobtype || "work from Home",
-      salary: job.salary || "",
-      canapply: job.canapply || "",
-      opportunity: job.opportunity || "",
-      active: job.active || false,
-      imageFile: null, 
-    });
-  }
-}, [job]);
-
-
-
-
-
   const handleUpdate = async () => {
-    setloader(true)
+    setloader(true);
     if (new Date(jobData.deadline) < new Date()) {
-  alert("Deadline should be a future date.");
-  setloader(false);
-  return;
-}
-  const formData = new FormData();
-  formData.append("title", jobData.title);
-  formData.append("description", jobData.description);
-  formData.append("skill", JSON.stringify(jobData.skill));
-  formData.append("budget", jobData.budget);
-  formData.append("deadline", jobData.deadline);
-  formData.append("jobtype", jobData.jobtype);
-  formData.append("salary", jobData.salary);
-  formData.append("canapply", jobData.canapply);
-  formData.append("opportunity", jobData.opportunity);
-  formData.append("active", jobData.active);
-  if (jobData.imageFile) {
-    formData.append("image", jobData.imageFile); 
-  }
+      alert("Deadline should be a future date.");
+      setloader(false);
+      return;
+    }
+    const formData = new FormData();
+    formData.append("title", jobData.title);
+    formData.append("description", jobData.description);
+    formData.append("skill", JSON.stringify(jobData.skill));
+    formData.append("budget", jobData.budget);
+    formData.append("deadline", jobData.deadline);
+    formData.append("jobtype", jobData.jobtype);
+    formData.append("salary", jobData.salary);
+    formData.append("canapply", jobData.canapply);
+    formData.append("opportunity", jobData.opportunity);
+    formData.append("active", jobData.active);
+    if (jobData.imageFile) formData.append("image", jobData.imageFile);
 
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/employer/update/${updateID}`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+      setloader(false);
+      navigate("/employer/home");
+    } catch (err) {
+      console.error("Update error:", err);
+      setloader(false);
+    }
+  };
 
-  try {
-    await fetch(`${import.meta.env.VITE_API_URL}/api/employer/update/${updateID}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-setloader(false)
-    navigate("/employer/home")
-  } catch (err) {
-    console.error("Update error:", err);
-  }
-};
-
+  const inputClass = "w-full bg-gray-50 dark:bg-bg-dark border border-gray-200 dark:border-border-color rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-secondary-text-color outline-none focus:ring-2 focus:ring-purple-300 dark:focus:ring-accent-color placeholder:text-gray-300";
+  const labelClass = "text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-secondary-text-color mb-1.5 block";
 
   return (
-
-     <div
+    <div
       data-theme={location.state?.themtrue ? "dark" : ""}
-      className="flex justify-around dark:bg-bg-dark"
+      className="min-h-screen bg-gray-50 dark:bg-bg-dark"
     >
-     <div className="flex p-5 justify-center h-15 hidden lg:block items-center gap-4">
-                                            <h1 className="text-sm text-purple-500 dark:text-white font-bold"> Skill <span className="text-blue-900 dark:text-accent-color ">Bridge</span> </h1>
-
+      {/* Top Bar */}
+      <div className="sticky top-0 z-10 bg-white dark:bg-bg-dark border-b border-gray-100 dark:border-border-color px-4 py-3 flex items-center justify-between">
+        <button
+          onClick={() => navigate("/employer/home")}
+          className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-secondary-text-color hover:text-gray-800 dark:hover:text-text-color transition-colors"
+        >
+          <ArrowLeft02Icon size={15} />
+          Back
+        </button>
+        <h1 className="text-sm font-bold">
+          <span className="text-purple-500 dark:text-white">Skill</span>
+          <span className="text-blue-900 dark:text-accent-color">Bridge</span>
+        </h1>
+        <div className="w-16" />
       </div>
 
-      <form
-       onSubmit={(e) => {
-  e.preventDefault();
-  handleUpdate();
-}}
-        className="lg:w-[70%] w-full mx-auto p-6 bg-white dark:bg-card-color shadow-lg rounded-lg"
-      >
-        <h2 className="text-2xl font-bold mb-4 text-center text-purple-500 dark:text-accent-color">
-          <span
-            onClick={() => navigate("/employer/home")}
-            className="size-fit cursor-pointer"
-          >
-            <ArrowLeft03Icon className="size-8 hover:scale-120 duration-200" />
-          </span>
-          Update Job
-        </h2>
+      <div className="max-w-2xl mx-auto px-4 py-6">
 
-        <input
-          type="text"
-          name="title"
-          placeholder="Job Title"
-          value={jobData.title}
-          onChange={handleChange}
-          className="w-full mb-4 p-2 border dark:border-border-color rounded dark:text-text-color"
-          required
-        />
-
-        <textarea
-          name="description"
-          placeholder="Job Description"
-          value={jobData.description}
-          onChange={handleChange}
-          className="w-full mb-4 p-2 border dark:border-border-color dark:text-text-color rounded"
-        />
-
-        <div className="mb-4">
-          <label className="block font-semibold mb-1 dark:text-secondary-text-color">Skills</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={skillInput}
-              onChange={(e) => setSkillInput(e.target.value)}
-              className="flex-1 p-2 border dark:border-border-color dark:text-text-color rounded"
-              placeholder="Enter a skill and press Add"
-            />
-            <button
-              type="button"
-              onClick={addSkill}
-              className="px-3 py-2 bg-purple-500 dark:bg-accent-color text-white rounded"
-            >
-              Add
-            </button>
-          </div>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {jobData.skill.map((sk, idx) => (
-              <div
-                key={idx}
-                className="bg-gray-200 px-3 py-1 rounded-full flex items-center gap-2"
-              >
-                <span>{sk}</span>
-                <button
-                  type="button"
-                  onClick={() => removeSkill(idx)}
-                  className="text-red-500 font-bold"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <input
-          type="number"
-          name="budget"
-          placeholder="Salary"
-          value={jobData.budget}
-          onChange={handleChange}
-          className="w-full mb-4 p-2 border dark:border-border-color dark:text-text-color rounded"
-        />
-
-        <input
-          type="date"
-          name="deadline"
-          value={jobData.deadline}
-          placeholder="Date"
-          onChange={handleChange}
-          className="w-full mb-4 p-2 border dark:border-border-color dark:text-text-color rounded"
-        />
-
-        <select
-          name="jobtype"
-          value={jobData.jobtype}
-          onChange={handleChange}
-          className="w-full mb-4 p-2 border dark:border-border-color dark:text-text-color rounded"
-        >
-          <option value="work from Home" className="dark:text-secondary-text-color dark:bg-card-color">
-            Work from Home
-          </option>
-          <option value="work from office" className="dark:text-secondary-text-color dark:bg-card-color">
-            Work from Office
-          </option>
-        </select>
-
-        <input
-          type="number"
-          name="salary"
-          placeholder="Budget"
-          value={jobData.salary}
-          onChange={handleChange}
-          className="w-full mb-4 p-2 border dark:border-border-color dark:text-text-color rounded"
-        />
-
-        <input
-          type="text"
-          name="canapply"
-          placeholder="Who can apply?"
-          value={jobData.canapply}
-          onChange={handleChange}
-          className="w-full mb-4 p-2 border dark:border-border-color dark:text-text-color rounded"
-        />
-
-        <input
-          type="number"
-          name="opportunity"
-          placeholder="No. of Opportunities"
-          value={jobData.opportunity}
-          onChange={handleChange}
-          className="w-full mb-4 p-2 border dark:border-border-color dark:text-text-color rounded"
-        />
-
-        <div className="mb-4">
-          <label className="block font-semibold mb-1 dark:text-secondary-text-color">Company Image</label>
-          <input
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleChange}
-            className="w-full p-2 border rounded dark:border-border-color dark:text-text-color"
-          />
-        </div>
-
+        {/* Header */}
         <div className="mb-6 flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="active"
-            checked={jobData.active}
-            onChange={handleChange}
-            className="w-4 h-4 cursor-pointer"
-          />
-          <label className="text-gray-800 dark:text-secondary-text-color font-medium">
-            Currently hiring (Active)
-          </label>
+          <div className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center">
+            <Edit01Icon size={15} className="text-orange-500" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-gray-800 dark:text-text-color">Update Job</h1>
+            <p className="text-xs text-gray-400 dark:text-secondary-text-color mt-0.5 capitalize truncate max-w-xs">{job?.title}</p>
+          </div>
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-purple-500 dark:bg-accent-color dark:hover:bg-accent-light duration-200 text-white py-2 rounded hover:bg-purple-700"
-        >
-         {loader? <div className="flex w-full h-full justify-center items-center" role="status">
-                <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 dark:fill-white  fill-purple-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-                </svg>
-                <span class="sr-only">Loading...</span>
-              </div>:<h2>Update</h2>}
-        </button>
-      </form>
+        <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="flex flex-col gap-4">
+
+          {/* Basic Info */}
+          <div className="bg-white dark:bg-card-color border border-gray-100 dark:border-border-color rounded-2xl overflow-hidden">
+            <div className="h-1 w-full bg-gradient-to-r from-orange-400 to-purple-400" />
+            <div className="p-5 flex flex-col gap-4">
+              <p className="text-xs font-semibold text-gray-500 dark:text-secondary-text-color uppercase tracking-wide">Basic Info</p>
+
+              <div>
+                <label className={labelClass}>Job Title *</label>
+                <input type="text" name="title" placeholder="e.g. React Developer" value={jobData.title} onChange={handleChange} className={inputClass} required />
+              </div>
+
+              <div>
+                <label className={labelClass}>Job Description</label>
+                <textarea name="description" placeholder="Describe the job role..." value={jobData.description} onChange={handleChange} rows={4} className={`${inputClass} resize-none`} />
+              </div>
+
+              <div>
+                <label className={labelClass}>Who Can Apply</label>
+                <input type="text" name="canapply" placeholder="e.g. Freshers, 1-2 years experience" value={jobData.canapply} onChange={handleChange} className={inputClass} />
+              </div>
+
+              <div>
+                <label className={labelClass}>Opportunities</label>
+                <input type="number" name="opportunity" placeholder="No. of openings" value={jobData.opportunity} onChange={handleChange} className={inputClass} />
+              </div>
+            </div>
+          </div>
+
+          {/* Skills */}
+          <div className="bg-white dark:bg-card-color border border-gray-100 dark:border-border-color rounded-2xl p-5 flex flex-col gap-3">
+            <p className="text-xs font-semibold text-gray-500 dark:text-secondary-text-color uppercase tracking-wide">Required Skills</p>
+
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSkill())}
+                placeholder="Type a skill and press Add or Enter"
+                className={inputClass}
+              />
+              <button type="button" onClick={addSkill}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-500 hover:bg-purple-600 text-white text-xs font-medium transition-colors flex-shrink-0">
+                <PlusSignIcon size={13} />
+                Add
+              </button>
+            </div>
+
+            {jobData.skill.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {jobData.skill.map((sk, idx) => (
+                  <span key={idx} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300 text-[11px] font-medium">
+                    {sk}
+                    <button type="button" onClick={() => removeSkill(idx)} className="text-purple-400 hover:text-red-500 transition-colors">
+                      <Cancel01Icon size={10} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Compensation */}
+          <div className="bg-white dark:bg-card-color border border-gray-100 dark:border-border-color rounded-2xl p-5 flex flex-col gap-4">
+            <p className="text-xs font-semibold text-gray-500 dark:text-secondary-text-color uppercase tracking-wide">Compensation & Type</p>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelClass}>Salary (₹)</label>
+                <input type="number" name="salary" placeholder="e.g. 15000" value={jobData.salary} onChange={handleChange} className={inputClass} />
+              </div>
+              <div>
+                <label className={labelClass}>Budget (₹)</label>
+                <input type="number" name="budget" placeholder="e.g. 20000" value={jobData.budget} onChange={handleChange} className={inputClass} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelClass}>Job Type</label>
+                <select name="jobtype" value={jobData.jobtype} onChange={handleChange} className={inputClass}>
+                  <option value="work from Home">Work from Home</option>
+                  <option value="work from office">Work from Office</option>
+                </select>
+              </div>
+              <div>
+                <label className={labelClass}>Deadline</label>
+                <input type="date" name="deadline" value={jobData.deadline} onChange={handleChange} className={inputClass} />
+              </div>
+            </div>
+          </div>
+
+          {/* Company Details */}
+          <div className="bg-white dark:bg-card-color border border-gray-100 dark:border-border-color rounded-2xl p-5 flex flex-col gap-4">
+            <p className="text-xs font-semibold text-gray-500 dark:text-secondary-text-color uppercase tracking-wide">Company Details</p>
+
+            {/* Image Upload */}
+            <div>
+              <label className={labelClass}>Company Image</label>
+              <label className="flex items-center gap-3 bg-gray-50 dark:bg-bg-dark border border-dashed border-gray-300 dark:border-border-color rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-border-color transition-colors">
+                {imagePreview ? (
+                  <img src={imagePreview} className="w-10 h-10 rounded-xl object-cover flex-shrink-0" alt="preview" />
+                ) : (
+                  <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center flex-shrink-0">
+                    <ImageAdd02Icon size={18} className="text-purple-400" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-gray-600 dark:text-secondary-text-color">
+                    {imagePreview ? "Image selected — click to change" : "Click to upload company logo"}
+                  </p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">PNG, JPG, WEBP supported</p>
+                </div>
+                <input type="file" name="image" accept="image/*" onChange={handleChange} className="hidden" />
+              </label>
+            </div>
+
+            {/* Active Toggle */}
+            <div
+              onClick={() => setJobData({ ...jobData, active: !jobData.active })}
+              className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${
+                jobData.active
+                  ? "bg-green-50 dark:bg-green-900/15 border-green-200 dark:border-green-800/30"
+                  : "bg-gray-50 dark:bg-bg-dark border-gray-200 dark:border-border-color"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <CheckmarkCircle01Icon size={16} className={jobData.active ? "text-green-500" : "text-gray-400"} />
+                <div>
+                  <p className={`text-xs font-semibold ${jobData.active ? "text-green-700 dark:text-green-400" : "text-gray-500 dark:text-secondary-text-color"}`}>
+                    {jobData.active ? "Currently Hiring" : "Not Active"}
+                  </p>
+                  <p className="text-[10px] text-gray-400 dark:text-secondary-text-color">Click to toggle</p>
+                </div>
+              </div>
+              <div className={`w-10 h-5 rounded-full transition-colors flex items-center px-0.5 ${jobData.active ? "bg-green-500" : "bg-gray-300 dark:bg-border-color"}`}>
+                <div className={`w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${jobData.active ? "translate-x-5" : "translate-x-0"}`} />
+              </div>
+            </div>
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loader}
+            className="w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-600 disabled:opacity-70 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+          >
+            {loader ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <>
+                <Edit01Icon size={15} />
+                Update Job
+              </>
+            )}
+          </button>
+
+        </form>
+      </div>
     </div>
-    
   );
 }

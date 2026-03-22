@@ -3,30 +3,23 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { jwtDecode } from "jwt-decode";
-import img1 from "../imgs/Computer login-amico.svg"
+import img1 from "../imgs/Computer login-amico.svg";
 
 export const Loging = () => {
-  const [getdata, setdata] = useState({
-    email: "",
-    password: "",
-  });
+  const [getdata, setdata] = useState({ email: "", password: "" });
+  const [loader, sertloader] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const [loader,sertloader] = useState(false)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setdata({ ...getdata, [name]: value });
+    setError("");
   };
 
-  const navigate = useNavigate();
-
   const Submitdata = async (e) => {
-    e.preventDefault(); 
-         sertloader(true)
-
-   
-       
-
-
+    e.preventDefault();
+    sertloader(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         method: "POST",
@@ -35,15 +28,13 @@ export const Loging = () => {
       });
 
       if (!response.ok) {
-                sertloader(false)
-
-        alert("Something wrong with email or password");
+        sertloader(false);
+        setError("Invalid email or password. Please try again.");
         return;
       }
 
       const data = await response.json();
       localStorage.setItem("token", data.token);
-
       const role = jwtDecode(data.token);
       if (role.roll === "freelancer") {
         navigate("/freelancer/home");
@@ -51,109 +42,168 @@ export const Loging = () => {
         navigate("/employer/home");
       }
     } catch (err) {
-        sertloader(false)
-      console.log("Login error:", err);
+      sertloader(false);
+      setError("Something went wrong. Please try again.");
     }
   };
 
   return (
-    <div className="md:w-screen md:h-screen bg-white flex-col-reverse md:flex-row  flex  overflow-hidden font-sans">
-      <div className="bg-white md:w-1/2 h-full p-10 relative md:overflow-y-auto">
+    <div className="md:w-screen md:h-screen bg-white flex-col-reverse md:flex-row flex overflow-hidden">
+
+      {/* Left — Form */}
+      <div className="bg-white md:w-1/2 h-full flex flex-col justify-center px-8 md:px-16 py-10">
+
+        {/* Logo + Nav */}
         <motion.div
-          initial={{ x: -30 }}
-          animate={{ x: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex items-center justify-around  md:mb-10"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="flex items-center justify-between mb-10"
         >
-          <h1 className="text-sm text-purple-500 font-bold"> Skill <span className="text-blue-900">Bridge</span> </h1>
-          <h1 className="md:text-xl text-sm  text-purple-600 font-bold ml-6">Login</h1>
-          <div className="ml-auto">
-            <h1
-              onClick={() => navigate("/register")}
-              className="text-purple-500 md:text-lg text-sm hover:border-purple-500 w-fit hover:border-b-[3px] cursor-pointer font-bold"
-            >
-              New Register
-            </h1>
-          </div>
+          <h1 className="text-sm font-bold">
+            <span className="text-purple-500">Skill</span>
+            <span className="text-blue-900">Bridge</span>
+          </h1>
+          <button
+            onClick={() => navigate("/register")}
+            className="text-xs font-medium text-gray-500 hover:text-purple-600 border border-gray-200 hover:border-purple-300 px-3 py-1.5 rounded-lg transition-colors"
+          >
+            Create account →
+          </button>
         </motion.div>
 
-        <form className="space-y-8 mt-16" onSubmit={Submitdata}>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <div className="flex items-center gap-2">
-              <Mail01Icon />
+        {/* Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mb-8"
+        >
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Welcome back</h2>
+          <p className="text-sm text-gray-400 mt-1">Sign in to your SkillBridge account</p>
+        </motion.div>
+
+        {/* Form */}
+        <form onSubmit={Submitdata} className="flex flex-col gap-4">
+
+          {/* Email */}
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">
+              Email Address
+            </label>
+            <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 focus-within:ring-2 focus-within:ring-purple-300 focus-within:border-purple-300 transition-all">
+              <Mail01Icon size={16} className="text-gray-400 flex-shrink-0" />
               <input
                 onChange={handleChange}
-                placeholder="Enter your email"
-                className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-purple-500"
+                placeholder="you@example.com"
+                className="bg-transparent w-full py-3 text-sm text-gray-700 placeholder:text-gray-300 outline-none"
                 type="email"
                 name="email"
+                required
               />
             </div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <div className="flex items-center gap-2">
-              <LockPasswordIcon />
+          {/* Password */}
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">
+              Password
+            </label>
+            <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 focus-within:ring-2 focus-within:ring-purple-300 focus-within:border-purple-300 transition-all">
+              <LockPasswordIcon size={16} className="text-gray-400 flex-shrink-0" />
               <input
                 onChange={handleChange}
                 placeholder="Enter your password"
-                className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-purple-500"
+                className="bg-transparent w-full py-3 text-sm text-gray-700 placeholder:text-gray-300 outline-none"
                 type="password"
                 name="password"
+                required
               />
             </div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-            <button
-              type="submit"
-              className="w-full md:py-2 py-1 bg-purple-500 hover:bg-purple-600 transition-all text-white rounded-lg text-lg font-semibold shadow-md"
+          {/* Error */}
+          {error && (
+            <motion.p
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-lg px-3 py-2"
             >
-              {loader? <div className="flex w-full h-full justify-center items-center" role="status">
-                <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 dark:fill-white  fill-purple-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-                </svg>
-                <span class="sr-only">Loading...</span>
-              </div>:<h2>Submit</h2>}
+              {error}
+            </motion.p>
+          )}
+
+          {/* Submit */}
+          <motion.button
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            type="submit"
+            disabled={loader}
+            className="w-full py-3 bg-purple-500 hover:bg-purple-600 disabled:opacity-70 transition-colors text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 mt-2"
+          >
+            {loader ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              "Sign In"
+            )}
+          </motion.button>
+
+          {/* Register Link */}
+          <p className="text-center text-xs text-gray-400 mt-2">
+            Don't have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/register")}
+              className="text-purple-500 font-semibold hover:underline"
+            >
+              Register here
             </button>
-          </motion.div>
+          </p>
+
         </form>
       </div>
 
-      {/* Right Hero Panel */}
-      <div className="bg-purple-500 md:w-1/2 md:h-full  overflow-hidden flex items-center flex-col justify-center relative">
+      {/* Right — Hero */}
+      <div className="bg-purple-500 md:w-1/2 md:h-full overflow-hidden flex items-center flex-col justify-center relative px-8">
+
+        {/* Background circles decoration */}
+        <div className="absolute top-10 right-10 w-32 h-32 rounded-full bg-purple-400/30" />
+        <div className="absolute bottom-20 left-5 w-20 h-20 rounded-full bg-purple-400/20" />
+        <div className="absolute top-1/2 left-0 w-10 h-10 rounded-full bg-white/10" />
+
         <motion.img
-          initial={{ y: -40 }}
-          animate={{ y: 0 }}
-          transition={{ type: "spring", stiffness: 60 }}
-          className="w-72 mb-6"
+          initial={{ y: -30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 60, delay: 0.3 }}
+          className="w-64 md:w-72 mb-8 relative z-10"
           src={img1}
-          alt="hero"
+          alt="login hero"
         />
 
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="text-center hidden md:block px-6 max-w-xl"
+          className="text-center hidden md:block px-4 max-w-md relative z-10"
         >
-          <h1 className="text-3xl text-white font-extrabold mb-2">Hey, welcome back </h1>
-          <p className="text-lg text-white">
-            This is <span className="font-semibold text-gray-200">SkillBridge</span> — your personalized platform to
-            discover high-quality opportunities that match your skills and goals.
+          <h1 className="text-2xl md:text-3xl text-white font-extrabold mb-3 leading-tight">
+            Hey, welcome back!
+          </h1>
+          <p className="text-sm text-purple-100 leading-relaxed">
+            SkillBridge connects talented freelancers with amazing employers. Find the perfect match for your journey.
           </p>
-          <p className="mt-4 text-white">
-            Whether you're a freelancer looking for exciting projects or an employer seeking top talent —
-            I’m here to guide you every step of the way.
-          </p>
-          <p className="mt-4 italic font-medium text-white">
-            Let’s find the perfect match for your journey. <br />
-            Log in and let’s get started!
-          </p>
+
+          {/* Feature Pills */}
+          <div className="flex flex-wrap justify-center gap-2 mt-6">
+            {["🔒 Secure Login", "⚡ Instant Access", "💼 Smart Matching"].map((tag, i) => (
+              <span key={i} className="text-xs bg-white/20 text-white px-3 py-1.5 rounded-full font-medium">
+                {tag}
+              </span>
+            ))}
+          </div>
         </motion.div>
+
       </div>
     </div>
   );

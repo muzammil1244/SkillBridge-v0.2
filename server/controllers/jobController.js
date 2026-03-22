@@ -67,11 +67,17 @@ export const Applyjob = async (req, res) => {
   }
 
 
-
-
-
   const { coverlater, status, rating } = req.body
-  const resume = req.file ? req.file.filename : null;
+
+  console.log("yes one")
+let resume ;
+
+  if(req.file){
+   resume = req.file ? await uploadToCloudinary(req.file.buffer , "skillbridgev0.2")  :"";
+
+
+  }
+  console.log("yes two")
 
   const alreadyApplied = job.applicants.find(
     (app) => app.freelancer.toString() === req.user.userID
@@ -79,15 +85,17 @@ export const Applyjob = async (req, res) => {
   if (alreadyApplied) {
     return res.status(400).send("You already applied to this job");
   }
+  console.log("yes one")
 
   try {
     job.applicants.push({ freelancer: req.user.userID, resume, coverlater, status, rating })
     await job.save();
+  console.log("yes one")
 
     res.status(200).send("application succesfully submited")
 
   } catch (error) {
-    res.status(500).send(error)
+    res.status(500).json(error)
   }
 
 }

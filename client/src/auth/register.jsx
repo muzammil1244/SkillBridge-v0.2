@@ -1,325 +1,277 @@
-import { LockPasswordIcon, Mail01Icon, UserSquareIcon, EyeIcon  } from "hugeicons-react";
+import { LockPasswordIcon, Mail01Icon, UserSquareIcon, EyeIcon, ImageAdd02Icon, ViewOffSlashIcon } from "hugeicons-react";
 import { useState } from "react";
-import { motion } from "motion/react"
-import { useNavigate, useNavigation } from "react-router-dom";
+import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    reason: "",
-    profileImage: "",
+    name: "", email: "", password: "", reason: "", profileImage: "",
   });
-const [showPassword, setShowPassword] = useState(false);
-  const [loader,sertloader] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [loader, sertloader] = useState(false);
+  const [error, setError] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+  const navigate = useNavigate();
 
-  const navigate= useNavigate()
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-
+    setError("");
     if (type === "file") {
-  setFormData({ ...formData, [name]: files[0] }); 
+      setFormData({ ...formData, [name]: files[0] });
+      setImagePreview(URL.createObjectURL(files[0]));
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
-  const Submitfun =async (e) => {
-     e.preventDefault(); //
-     console.log("yesss")
-  sertloader(true)
-     const realFormData = new FormData();
-  realFormData.append("name", formData.name);
-  realFormData.append("email", formData.email);
-  realFormData.append("password", formData.password);
-  realFormData.append("roll", formData.reason);
-  realFormData.append("profileImage", formData.profileImage); 
 
-   try {
-         console.log("yesss")
-console.log("vit api ",import.meta.env.VITE_API_URL)
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
-      method: "POST",
-      body: realFormData, // ✅ Don't stringify
-    });
+  const Submitfun = async (e) => {
+    e.preventDefault();
+    sertloader(true);
+    const realFormData = new FormData();
+    realFormData.append("name", formData.name);
+    realFormData.append("email", formData.email);
+    realFormData.append("password", formData.password);
+    realFormData.append("roll", formData.reason);
+    realFormData.append("profileImage", formData.profileImage);
 
-    const data = await response.json();
-    if (!response.ok) {
-      sertloader(false)
-      if (data.error && data.details.includes("duplicate key")) {
-        alert("Email already exists. Please use a different email.");
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+        method: "POST",
+        body: realFormData,
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        sertloader(false);
+        if (data.details?.includes("duplicate key")) {
+          setError("Email already exists. Please use a different email.");
+        } else {
+          setError("Registration failed: " + data.error);
+        }
       } else {
-        alert("Registration failed: " + data.error);
+        sertloader(false);
+        navigate("/login");
       }
-    } else {
-      alert("Registration successful!");
-      navigate("/login")
+    } catch (err) {
+      sertloader(false);
+      setError("Something went wrong. Please try again.");
     }
-  } catch (err) {
-    console.error("Error submitting form:", err);
-
-
-  }
-     
-
-  }
+  };
 
   return (
-    <div className="bg-white h-screen md:h-[100%] lg:h-screen md:flex-col   lg:w-screen lg:px-5 lg:py-3  lg:flex lg:flex-row overflow-hidden">
-      <div className="md:relative px-4 h-screen   py-4 lg:w-1/2 lg:h-full md:px-10 md:py-10  shadow-xl bg-white lg:px-10 lg:py-4 overflow-y-hidden">
-        < motion.div
-          initial={{
-            x: -50
-          }}
-          animate={{
-            x: 0
-          }}
-          transition={{
-            delay: 1.2
-          }}
+    <div className="w-screen h-screen bg-white flex flex-col-reverse md:flex-row overflow-hidden">
 
+      {/* Left — Form */}
+      <div className="bg-white md:w-1/2 h-full flex flex-col justify-center px-8 md:px-14 py-10 overflow-y-auto">
 
-
-          className="flex lg:h-15 overflow-hidden justify-around items-center   lg:mb-5 ">
-
-          <h1 className="text-sm text-purple-500 font-bold"> Skill <span className="text-blue-900">Bridge</span> </h1>
-
-          <h1 className="text-3xl text-purple-600  flex ml-10 text-sm md:text-lg    font-bold">Registration</h1>
-
-        </ motion.div>
-        <form className="md:space-y-4 md:block h-2/3 flex md:mt-0 mt-10 flex-col justify-around" onSubmit={Submitfun}>
-          <motion.div
-            initial={{
-              x: -10
-            }}
-            animate={{
-              x: 0
-            }}
-            transition={{
-              delay: 1.3
-            }}
+        {/* Logo + Nav */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="flex items-center justify-between"
+        >
+          <h1 className="text-sm font-bold">
+            <span className="text-purple-500">Skill</span>
+            <span className="text-blue-900">Bridge</span>
+          </h1>
+          <button
+            onClick={() => navigate("/login")}
+            className="text-xs font-medium mt-5 text-gray-500 hover:text-purple-600 border border-gray-200 hover:border-purple-300 px-3 py-1.5 rounded-lg transition-colors"
           >
-            <label className="block text-gray-700 mb-2 flex gap-2"><UserSquareIcon /> User Name</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Enter User Name"
-              onChange={handleChange}
-              className="w-full px-2 py-1 p-2 border border-gray-300 shadow-sm  rounded"
-            />
-          </motion.div>
+            Sign in →
+          </button>
+        </motion.div>
 
-          <motion.div
-            initial={{
-              x: -10
-            }}
-            animate={{
-              x: 0
-            }}
-            transition={{
-              delay: 1.3
-            }}>
-            <label className="block text-gray-700 mb-2  flex gap-2"><Mail01Icon /> Email</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter Email"
-              onChange={handleChange}
-              className="w-full px-2 py-1 p-2 border border-gray-300 shadow-sm  rounded"
-            />
-          </motion.div>
-<motion.div
-  initial={{ x: -10 }}
-  animate={{ x: 0 }}
-  transition={{ delay: 1.3 }}
->
-  <label className="block text-gray-700 mb-2 flex gap-2">
-    <LockPasswordIcon /> Password
-  </label>
-  <div className="relative">
-    <input
-      type={showPassword ? "text" : "password"}
-      name="password"
-      placeholder="Enter password"
-      onChange={handleChange}
-      className="w-full px-2 py-1 p-2 border border-gray-300 shadow-sm rounded pr-10"
-    />
-    <span
-      onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
-    >
-      {showPassword ? <EyeIcon size={16}/>:<EyeIcon size={14}/> }
-    </span>
-  </div>
-</motion.div>
+        {/* Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mb-6"
+        >
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Create account 🚀</h2>
+          <p className="text-sm text-gray-400 mt-1">Join SkillBridge and start your journey</p>
+        </motion.div>
 
+        <form onSubmit={Submitfun} className="flex flex-col gap-3.5">
 
-          <motion.div
-            initial={{
-              x: -10
-            }}
-            animate={{
-              x: 0
-            }}
-            transition={{
-              delay: 1.3
-            }}>
-            <h2 className="text-gray-700">Choose Reason</h2>
-            <label className="mr-4">
+          {/* Name */}
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">Full Name</label>
+            <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 focus-within:ring-2 focus-within:ring-purple-300 focus-within:border-purple-300 transition-all">
+              <UserSquareIcon size={15} className="text-gray-400 flex-shrink-0" />
               <input
-                type="radio"
-                name="reason"
-                value="freelancer"
-                onChange={handleChange}
-                className="appearance-none size-4 rounded-full  border border-gray-400 checked:bg-purple-500 checked:border-transparent checked:outline-white checked:outline-2 focus:outline-none"
+                type="text" name="name" placeholder="Your full name"
+                onChange={handleChange} required
+                className="bg-transparent w-full py-2.5 text-sm text-gray-700 placeholder:text-gray-300 outline-none"
               />
-              <span className="ml-1">Freelancer</span>
-            </label>
+            </div>
+          </motion.div>
 
-            <label>
+          {/* Email */}
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">Email Address</label>
+            <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 focus-within:ring-2 focus-within:ring-purple-300 focus-within:border-purple-300 transition-all">
+              <Mail01Icon size={15} className="text-gray-400 flex-shrink-0" />
               <input
-                type="radio"
-                name="reason"
-                value="employer"
-                onChange={handleChange}
-                className="appearance-none size-4 rounded-full border border-gray-400 checked:bg-purple-500 checked:border-transparent checked:outline-white checked:outline-2 focus:outline-none"
-
+                type="email" name="email" placeholder="you@example.com"
+                onChange={handleChange} required
+                className="bg-transparent w-full py-2.5 text-sm text-gray-700 placeholder:text-gray-300 outline-none"
               />
-              <span className="ml-1">Employer</span>
+            </div>
+          </motion.div>
+
+          {/* Password */}
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">Password</label>
+            <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 focus-within:ring-2 focus-within:ring-purple-300 focus-within:border-purple-300 transition-all">
+              <LockPasswordIcon size={15} className="text-gray-400 flex-shrink-0" />
+              <input
+                type={showPassword ? "text" : "password"} name="password"
+                placeholder="Create a password" onChange={handleChange} required
+                className="bg-transparent w-full py-2.5 text-sm text-gray-700 placeholder:text-gray-300 outline-none flex-1"
+              />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-400 hover:text-purple-500 transition-colors flex-shrink-0">
+                {showPassword ? <ViewOffSlashIcon size={15} /> : <EyeIcon size={15} />}
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Role */}
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-2 block">I am a</label>
+            <div className="grid grid-cols-2 gap-2">
+              {["freelancer", "employer"].map((role) => (
+                <label
+                  key={role}
+                  className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border cursor-pointer transition-all text-sm font-medium capitalize ${
+                    formData.reason === role
+                      ? "bg-purple-50 border-purple-400 text-purple-600"
+                      : "bg-gray-50 border-gray-200 text-gray-500 hover:border-purple-200"
+                  }`}
+                >
+                  <input type="radio" name="reason" value={role} onChange={handleChange} className="hidden" />
+                  {role === "freelancer" ? "💻" : "🏢"} {role}
+                </label>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Profile Image */}
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}>
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5 block">Profile Photo</label>
+            <label className="flex items-center gap-3 bg-gray-50 border border-dashed border-gray-300 rounded-xl px-4 py-2.5 cursor-pointer hover:bg-gray-100 transition-colors">
+              {imagePreview ? (
+                <img src={imagePreview} className="w-8 h-8 rounded-xl object-cover flex-shrink-0" alt="preview" />
+              ) : (
+                <div className="w-8 h-8 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                  <ImageAdd02Icon size={15} className="text-purple-400" />
+                </div>
+              )}
+              <span className="text-xs text-gray-400">
+                {imagePreview ? "Photo selected ✓" : "Click to upload profile photo"}
+              </span>
+              <input type="file" name="profileImage" accept="image/*" onChange={handleChange} className="hidden" />
             </label>
           </motion.div>
 
-          <motion.div
-            initial={{
-              x: -10
-            }}
-            animate={{
-              x: 0
-            }}
-            transition={{
-              delay: 1.3
-            }}>
-            <label id="profileImage" className="block text-gray-700">Choose Profile Image</label>
-            <input
-              type="file"
-              id="profileImage"
-              name="profileImage"
-              accept="image/*"
-              onChange={handleChange}
-              className="mt-1 text-center w-40 px-3 bg-purple-300 pl-3 shadow  p-1  rounded-xl"
-            />
-          </motion.div >
-          < motion.div
-            initial={{
-              x: -10
-            }}
-            animate={{
-              x: 0
-            }}
-            transition={{
-              delay: 1.3
-            }} className="md:flex   gap-4 md:items-center md:justify-center">
-            <button type="submit" className="md:px-40 ml-3 md:ml-0 bg-purple-500 md:py-2 rounded text-white mt-5 px-30 py-2 cursor-pointer"> 
-              
-              {loader? <div className="flex w-full h-full justify-center items-center" role="status">
-                <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 dark:fill-white  fill-purple-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-                </svg>
-                <span class="sr-only">Loading...</span>
-              </div>:<h2>
-Submit
+          {/* Error */}
+          {error && (
+            <motion.p
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-lg px-3 py-2"
+            >
+              {error}
+            </motion.p>
+          )}
 
-              </h2>}</button>
-            <h1 onClick={()=>navigate("/login")} className=" font-extrabold  text-purple-500 hover:border-b-[3px] mt-2 cursor-pointer hover:border-purple-500  ">go for Login</h1>
-          </motion.div>
+          {/* Submit */}
+          <motion.button
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            type="submit"
+            disabled={loader}
+            className="w-full py-3 bg-purple-500 hover:bg-purple-600 disabled:opacity-70 transition-colors text-white rounded-xl text-sm font-semibold flex items-center justify-center mt-1"
+          >
+            {loader ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : "Create Account"}
+          </motion.button>
 
+          <p className="text-center text-xs text-gray-400">
+            Already have an account?{" "}
+            <button type="button" onClick={() => navigate("/login")} className="text-purple-500 font-semibold hover:underline">
+              Sign in
+            </button>
+          </p>
 
         </form>
-
-        <motion.div
-          viewport={{ once: true }}
-
-          initial={{
-            y: 0
-          }}
-
-          animate={{
-            y: [0, -100, 0, -900]
-          }}
-          transition={{
-            delay: 0.5,
-            duration: 1,
-
-          }}
-
-          className="w-full h-full absolute top-0 left-0  bg-purple-500">
-
-        </motion.div>
       </div>
 
-      <div className="relative hidden md:py-20 md:block  lg:block lg:w-1/2 lg:h-full bg-purple-500  items-center justify-center  lg:flex md:flex  flex-col">
+      {/* Right — Live Preview */}
+      <div className="bg-purple-500 md:w-1/2 md:h-full hidden md:flex flex-col items-center justify-center px-8 relative overflow-hidden">
+
+        {/* BG Decoration */}
+        <div className="absolute top-10 right-10 w-40 h-40 rounded-full bg-purple-400/30" />
+        <div className="absolute bottom-20 left-5 w-24 h-24 rounded-full bg-purple-400/20" />
+        <div className="absolute top-1/3 left-0 w-12 h-12 rounded-full bg-white/10" />
+
+        {/* Live Preview Card — draggable */}
         <motion.div
-
           drag
-          dragConstraints={{ left: -100, right: 100, top: -50, bottom: 10 }}
-          animate={{ x: 0, y: 0 }}
-          whileDrag={{ scale: 0.9 }}
-          dragElastic={0.5}
-
-
-          className="bg-white p-6 rounded-xl shadow-md w-72 text-center">
-          <div className="mb-4">
-            {formData.profileImage ? (
-              <img
-                  src={formData.profileImage ? URL.createObjectURL(formData.profileImage) : ""}
-
-                className="w-24 h-24 mx-auto rounded-full object-cover"
-                alt="Profile"
-              />
+          dragConstraints={{ left: -80, right: 80, top: -40, bottom: 40 }}
+          whileDrag={{ scale: 0.95 }}
+          dragElastic={0.3}
+          className="bg-white rounded-2xl shadow-2xl w-72 p-5 text-center cursor-grab active:cursor-grabbing relative z-10 mb-6"
+        >
+          {/* Avatar */}
+          <div className="mb-3">
+            {imagePreview ? (
+              <img src={imagePreview} className="w-20 h-20 mx-auto rounded-2xl object-cover border-2 border-purple-100" alt="Profile" />
             ) : (
-              <div className="w-24 h-24 mx-auto rounded-full bg-purple-300 flex items-center justify-center text-white text-xl">
-                ?
+              <div className="w-20 h-20 mx-auto rounded-2xl bg-purple-100 flex items-center justify-center text-purple-400 text-2xl">
+                {formData.name ? formData.name.charAt(0).toUpperCase() : "?"}
               </div>
             )}
           </div>
 
-          <h2 className="text-xl font-bold text-orange-500">
+          <h2 className="text-base font-bold text-orange-500 capitalize">
             {formData.name || "Your Name"}
           </h2>
-          <p className="text-sm text-gray-600">
+          <p className="text-xs text-gray-400 mt-0.5">
             {formData.email || "youremail@example.com"}
           </p>
 
-          <p className="mt-2 text-sm text-purple-800 font-semibold">
-            {formData.reason || "Role: Not selected"}
-          </p>
+          {formData.reason && (
+            <span className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium capitalize bg-purple-50 text-purple-600">
+              {formData.reason === "freelancer" ? "💻" : "🏢"} {formData.reason}
+            </span>
+          )}
+
+          <div className="mt-3 h-px bg-gray-100" />
+          <p className="text-[10px] text-gray-300 mt-2">Drag me around!</p>
         </motion.div>
 
-        <h1 className="text-2xl text-white mt-4">Skill Bridge</h1>
-        <p className="text-10 text-white text-center w-2/3">Skill Bridge helps you get real internships and freelance opportunities.
-          Start your career journey by connecting with the right employers.</p>
-
-
+        {/* Text */}
         <motion.div
-
-          initial={{
-            y: 0
-          }}
-          viewport={{ once: true }}
-
-          animate={{
-            y: [0, 100, 0, 900]
-          }}
-          transition={{
-            delay: 0.5,
-            duration: 1,
-
-          }}
-
-          className="w-full h-full absolute top-0 left-0  bg-white">
-
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="text-center max-w-xs relative z-10"
+        >
+          <h1 className="text-2xl font-extrabold text-white mb-2">Start your journey</h1>
+          <p className="text-sm text-purple-100 leading-relaxed">
+            SkillBridge connects talented freelancers with amazing employers. Build your career today.
+          </p>
+          <div className="flex flex-wrap justify-center gap-2 mt-4">
+            {["🚀 Get Hired", "💼 Post Jobs", "🤝 Connect"].map((tag, i) => (
+              <span key={i} className="text-xs bg-white/20 text-white px-3 py-1.5 rounded-full font-medium">{tag}</span>
+            ))}
+          </div>
         </motion.div>
+
       </div>
     </div>
   );
