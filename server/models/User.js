@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
       roll:{
 
         type:String,
-        enum:['freelancer','employer'],
+        enum:['Candidate','Recruiter'],
         required:true
       },
       profileImage:{

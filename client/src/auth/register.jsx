@@ -141,7 +141,7 @@ export const Register = () => {
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
             <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-2 block">I am a</label>
             <div className="grid grid-cols-2 gap-2">
-              {["freelancer", "employer"].map((role) => (
+              {["Candidate", "Recruiter"].map((role) => (
                 <label
                   key={role}
                   className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border cursor-pointer transition-all text-sm font-medium capitalize ${
@@ -151,7 +151,7 @@ export const Register = () => {
                   }`}
                 >
                   <input type="radio" name="reason" value={role} onChange={handleChange} className="hidden" />
-                  {role === "freelancer" ? "💻" : "🏢"} {role}
+                  {role === "Candidate" ? "💻" : "🏢"} {role}
                 </label>
               ))}
             </div>
@@ -246,7 +246,7 @@ export const Register = () => {
 
           {formData.reason && (
             <span className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium capitalize bg-purple-50 text-purple-600">
-              {formData.reason === "freelancer" ? "💻" : "🏢"} {formData.reason}
+              {formData.reason === "Candidate" ? "💻" : "🏢"} {formData.reason}
             </span>
           )}
 
@@ -263,7 +263,7 @@ export const Register = () => {
         >
           <h1 className="text-2xl font-extrabold text-white mb-2">Start your journey</h1>
           <p className="text-sm text-purple-100 leading-relaxed">
-            SkillBridge connects talented freelancers with amazing employers. Build your career today.
+            SkillBridge connects talented Candidates with amazing Recruiters. Build your career today.
           </p>
           <div className="flex flex-wrap justify-center gap-2 mt-4">
             {["🚀 Get Hired", "💼 Post Jobs", "🤝 Connect"].map((tag, i) => (
