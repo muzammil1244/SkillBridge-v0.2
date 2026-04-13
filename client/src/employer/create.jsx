@@ -63,6 +63,8 @@ export function Create() {
       formData.append("skill", JSON.stringify(jobData.skill));
       if (jobData.image) formData.append("image", jobData.image);
 
+
+      console.log("formdata",formData)
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/jobcreate`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -75,7 +77,7 @@ export function Create() {
         navigate("/employer/home");
       } else {
         sertloader(false);
-        alert("Job post failed: " + result.error);
+        console.log(result.error);
       }
     } catch (err) {
       console.error("Error:", err);

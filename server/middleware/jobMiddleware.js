@@ -1,6 +1,6 @@
 
 export const JobMiddleware =(req,res,next)=>{
-    if (req.user.roll !== "employer") {
+    if (req.user.roll !== "Recruiter") {
   return res.status(403).json({ error: "Only employers can perform this action" });
 }
 
