@@ -267,26 +267,26 @@ export default function ChatApp() {
                       }`}
                     >
                       {Messages}
-                      {fileUrl && (
-                        <div className="mt-2">
-                          {fileUrl.endsWith(".jpg") || fileUrl.endsWith(".png") || fileUrl.endsWith(".webp") ? (
-                            <img
-                              src={`https://skillbridge-x62a.onrender.com/uploads/${fileUrl}`}
-                              alt="sent"
-                              className="max-w-xs rounded-xl mt-1"
-                            />
-                          ) : (
-                            <a
-                              href={`https://skillbridge-x62a.onrender.com/uploads/${fileUrl}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 mt-1 text-xs underline opacity-80"
-                            >
-                              <File02Icon size={13} /> View File
-                            </a>
-                          )}
-                        </div>
-                      )}
+                  {fileUrl && (
+  <div className="mt-2">
+    {fileUrl.match(/\.(jpg|png|webp)/i) ? (
+      <img
+        src={fileUrl}
+        alt="sent"
+        className="max-w-xs rounded-xl mt-1"
+      />
+    ) : (
+      <a
+        href={fileUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-1.5 mt-1 text-xs underline opacity-80"
+      >
+        <File02Icon size={13} /> View File
+      </a>
+    )}
+  </div>
+)}
                     </div>
                   </div>
                 );

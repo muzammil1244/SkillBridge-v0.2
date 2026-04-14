@@ -32,6 +32,7 @@ export const Applications = () => {
       });
       const json = await data.json();
       setApplicants(json.applicants);
+      console.log("application data ",json.applicants)
     } catch (err) {
       console.log(err);
     } finally {
@@ -241,14 +242,14 @@ export const Applications = () => {
 
                   {/* Actions */}
                   <div className="flex gap-2 pt-1 border-t border-gray-100 dark:border-border-color">
-                    <a
-                      href={applicant.resume}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 py-2 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300 text-xs font-medium text-center hover:bg-purple-100 transition-colors"
-                    >
-                      View Resume
-                    </a>
+                   <a
+ href={applicant.resume}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="flex-1 py-2 rounded-xl bg-purple-50 text-purple-600 text-xs text-center"
+>
+  View Resume
+</a>
                     <button
                       onClick={() => navigate("/chatapp", {
                         state: { senderId, reciverId: applicant, conversationId: "new", jobid: jobId, employertrue: true }

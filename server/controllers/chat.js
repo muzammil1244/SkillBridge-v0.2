@@ -1,7 +1,7 @@
+import { uploadToCloudinary } from "../middleware/multersetup.js"
 import { Conversation } from "../models/Conversation.js"
 import { Message } from "../models/Message.js" 
 import User from "../models/User.js"
-
 export const StoreSenderAndReciver = async (req, res) => {
 
 
@@ -68,9 +68,12 @@ export const Messages = async (req, res) => {
   const { conversationId, senderId, message, reciverId = "" } = req.body;
   let file = "";
 
-  if (req.file) {
-    file =   req.file ? req.file.filename : null;
-
+   if (req.file) {
+    file = await uploadToCloudinary(  // ← yeh change karo
+      req.file.buffer,
+      "skillbridge/chat",
+      req.file.mimetype
+    );
   }
 console.log( "file data ",file)
   try {

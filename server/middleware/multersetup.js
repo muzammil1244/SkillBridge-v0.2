@@ -15,14 +15,14 @@ const storage = multer.memoryStorage();
 export const upload = multer({ storage });
 
 // Yeh function call karo controller mein
-export const uploadToCloudinary = (fileBuffer, folder) => {
+export const uploadToCloudinary = (fileBuffer, folder,mimetype) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream(
 
-     { folder: folder || "skillbridge/profiles",
-       resource_type: "raw",      // ✅ PDF ke liye raw chahiye
-        format: "pdf",
-        transformation: [{ width: 500, height: 500, crop: "fill" }]
+         {
+        folder: folder || "skillbridge/profiles",
+        resource_type: mimetype === "application/pdf" ? "raw" : "image", // ← wapas raw
+        access_mode: "public",
       },
       (error, result) => {
         if (error) reject(error);

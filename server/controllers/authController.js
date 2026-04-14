@@ -17,6 +17,8 @@ export async function register(req, res) {
 
      profileImage = req.file ? await uploadToCloudinary(req.file.buffer,"skillbridgev0.2"):"" ;
 
+      }else{
+        profileImage ="https://res.cloudinary.com/dkuqude1b/image/upload/v1776100827/Colorful_gradient_profile_avatar_wpdsqx.png"
       }
     const hashedPassword = await hash(password, 10);
 console.log( name, email, hashedPassword, roll,profileImage)

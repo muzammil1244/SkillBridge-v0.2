@@ -23,6 +23,8 @@ console.log("yes one")
 
      profileImage = req.file ? await uploadToCloudinary(req.file.buffer,"skillbridgev0.2"):"" ;
 
+      }else{
+        profileImage ="https://res.cloudinary.com/dkuqude1b/image/upload/v1776100523/Modern_geometric_logo_design_xqgq3b.png"
       }
       console.log("yes two")
 
@@ -73,8 +75,8 @@ export const Applyjob = async (req, res) => {
 let resume ;
 
   if(req.file){
-   resume = req.file ? await uploadToCloudinary(req.file.buffer , "skillbridgev0.2")  :"";
-
+   resume = req.file ? await uploadToCloudinary(req.file.buffer , "skillbridgev0.2",req.file.mimetype)  :"";
+console.log(req.file.mimetype)
 
   }
   console.log("yes two")

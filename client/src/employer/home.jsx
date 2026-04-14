@@ -164,6 +164,7 @@ export const Home = () => {
 
       const pdata = await data.json();
       setprofile(pdata);
+      console.log("profiledata of re",pdata)
 
     } catch (err) {
       console.log(err);
@@ -578,7 +579,7 @@ if(icon === "true"){
                   )}
                 </div>
                 <img className="w-10 h-10 md:w-12 md:h-12 object-cover rounded-xl border border-gray-100 dark:border-border-color flex-shrink-0"
-                  src={element.image?element.image:} alt={element.title} />
+                  src={element.image} alt={element.title} />
               </div>
 
               {/* Description */}

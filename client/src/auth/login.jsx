@@ -36,7 +36,7 @@ export const Loging = () => {
       const data = await response.json();
       localStorage.setItem("token", data.token);
       const role = jwtDecode(data.token);
-      if (role.roll === "freelancer") {
+      if (role.roll === "Candidate") {
         navigate("/freelancer/home");
       } else {
         navigate("/employer/home");
