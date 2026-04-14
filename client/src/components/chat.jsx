@@ -67,6 +67,7 @@ export default function ChatApp() {
       setMessages(data);
       setConversationId(conversationId);
       setReceiver(user);
+      console.log("reciver data",user)
       setSidebarOpen(false);
     } catch (err) {}
   };
@@ -212,7 +213,7 @@ export default function ChatApp() {
               <div className="relative">
                 <img
                   className="w-9 h-9 rounded-xl object-cover"
-                  src={`https://skillbridge-x62a.onrender.com/uploads/${receiver.user?.image || receiver.default?.profileImage}`}
+                  src={receiver.user?.image}
                   alt=""
                 />
                 <div className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-white dark:border-bg-dark" />

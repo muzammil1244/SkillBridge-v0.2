@@ -665,11 +665,9 @@ const handlefilter = (e) => {
             type="submit"
             className="flex-1 py-2 rounded-lg bg-[#534AB7] hover:bg-[#3C3489] text-white text-sm font-medium transition-colors"
           >
-            {loader ? (
-              <div className="flex justify-center items-center">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              </div>
-            ) : "Save Changes"}
+            
+              Save
+          
           </button>
         </div>
 
